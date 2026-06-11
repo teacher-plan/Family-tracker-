@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>البطل الأسبوعي 🏆</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
+:root {
+  --gold:#F5C518;--orange:#FF6B35;--blue:#1B4FD8;--blue-light:#3B6FFF;
+  --green:#22C55E;--red:#EF4444;--purple:#8B5CF6;
+  --bg:#0D1117;--card:#161B27;--card2:#1E2638;--text:#F0F4FF;
+  --text-muted:#7A8BAA;--border:#252E45;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(59,111,255,0.15) 0%,transparent 70%);}
+.app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding-bottom:90px;}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#0d1f6e,#2d0b6b);padding:22px 16px 30px;text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+.header::after{content:'';position:absolute;bottom:-20px;left:-10%;right:-10%;height:40px;background:var(--bg);border-radius:50% 50% 0 0/100%;}
+.header h1{font-size:26px;font-weight:900;position:relative;}
+.header h1 span{color:var(--gold);}
+.header p{font-size:12px;opacity:0.7;margin-top:4px;position:relative;}
+.header-date{font-size:11px;opacity:0.5;margin-top:5px;position:relative;}
+
+/* NAV — 5 tabs */
+.nav{display:flex;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+.nav-btn{flex:1;padding:10px 2px;background:none;border:none;color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-bottom:3px solid transparent;transition:color 0.2s;}
+.nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.nav-btn .ni{font-size:18px;}
+
+/* PAGES */
+.page{display:none;padding:16px;}
+.page.active{display:block;}
+.sec-title{font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+/* LEADERBOARD BARS */
+.chart-wrap{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:18px 12px 14px;margin-bottom:18px;overflow:hidden;}
+.chart-title{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:14px;font-weight:700;}
+.bars-container{display:flex;align-items:flex-end;justify-content:center;gap:8px;height:190px;padding:0 4px;}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:0;max-width:78px;cursor:pointer;}
+.bar-avatar-wrap{width:44px;height:44px;border-radius:50%;overflow:hidden;border:3px solid var(--border);background:var(--card2);display:flex;align-items:center;justify-content:center;}
+.bar-avatar-wrap.rank-1{border-color:var(--gold);box-shadow:0 0 12px rgba(245,197,24,0.5);}
+.bar-avatar-wrap.rank-2{border-color:#aaa;}
+.bar-avatar-wrap.rank-3{border-color:#CD7F32;}
+.bar-pts{font-size:11px;font-weight:900;color:var(--gold);}
+.bar-track{flex:1;width:100%;display:flex;align-items:flex-end;min-height:16px;}
+.bar-fill{width:100%;border-radius:8px 8px 0 0;position:relative;min-height:8px;transition:height 1s cubic-bezier(0.34,1.56,0.64,1);}
+.bar-fill::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,0.18),transparent);}
+.bar-name{font-size:10px;font-weight:700;color:var(--text-muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;}
+
+/* RANK LIST */
+.rank-list{display:flex;flex-direction:column;gap:8px;}
+.rank-row{background:var(--card);border-radius:14px;padding:12px 13px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);cursor:pointer;transition:transform 0.15s;}
+.rank-row:active{transform:scale(0.98);}
+.rank-row.r1{border-color:var(--gold);background:linear-gradient(135deg,#161B27,#221900);}
+.rank-row.r2{border-color:#888;}
+.rank-row.r3{border-color:#CD7F32;}
+.rank-medal{font-size:20px;flex-shrink:0;width:26px;text-align:center;}
+.rank-av{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--border);background:var(--card2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rank-av img,.rank-av svg{width:80%;height:80%;}
+.rank-av img{width:100%;height:100%;object-fit:cover;}
+.rank-info{flex:1;min-width:0;}
+.rank-name{font-size:13px;font-weight:800;}
+.rank-sub{font-size:11px;color:var(--text-muted);margin-top:1px;}
+.streak-badge{display:inline-flex;align-items:center;gap:2px;background:rgba(245,197,24,0.1);border:1px solid rgba(245,197,24,0.2);border-radius:6px;padding:1px 6px;font-size:10px;color:var(--gold);font-weight:700;margin-top:2px;}
+.pts-pill{background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-weight:900;font-size:13px;padding:5px 10px;border-radius:16px;flex-shrink:0;}
+.goal-chip{display:inline-block;background:rgba(59,111,255,0.15);border:1px solid rgba(59,111,255,0.3);border-radius:6px;padding:1px 7px;font-size:10px;color:var(--blue-light);font-weight:700;margin-top:2px;}
+
+/* STATS */
+.stats-row{display:flex;gap:8px;margin-bottom:16px;}
+.stat-card{flex:1;background:var(--card);border-radius:12px;padding:11px 6px;text-align:center;border:1px solid var(--border);}
+.stat-num{font-size:21px;font-weight:900;}
+.stat-label{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.c-green{color:var(--green);}.c-gold{color:var(--gold);}.c-blue{color:var(--blue-light);}.c-red{color:var(--red);}
+
+/* TASKS PAGE */
+.day-selector{display:flex;gap:5px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;scrollbar-width:none;}
+.day-selector::-webkit-scrollbar{display:none;}
+.day-btn{flex-shrink:0;padding:7px 12px;border-radius:18px;background:var(--card);border:1px solid var(--border);color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.day-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.child-chips-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px;scrollbar-width:none;}
+.child-chips-row::-webkit-scrollbar{display:none;}
+.cchip{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:7px 9px;border-radius:12px;border:2px solid transparent;background:var(--card);transition:all 0.2s;}
+.cchip.sel{border-color:var(--gold);background:var(--card2);}
+.cchip-av{width:36px;height:36px;border-radius:50%;overflow:hidden;background:var(--card2);display:flex;align-items:center;justify-content:center;}
+.cchip-av img{width:100%;height:100%;object-fit:cover;}
+.cchip-av svg{width:80%;height:80%;}
+.cchip-name{font-size:10px;font-weight:700;color:var(--text-muted);}
+.cchip.sel .cchip-name{color:var(--gold);}
+
+/* TASK CARDS */
+.task-list{display:flex;flex-direction:column;gap:8px;}
+.task-card{background:var(--card);border-radius:14px;padding:12px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;transition:all 0.2s;}
+.task-card.done{border-color:var(--green);background:rgba(34,197,94,0.07);}
+.task-card.failed{border-color:var(--red);background:rgba(239,68,68,0.07);opacity:0.7;}
+.task-card.penalty{border-color:var(--red);background:rgba(239,68,68,0.05);}
+.task-icon{font-size:22px;flex-shrink:0;}
+.task-body{flex:1;}
+.task-name{font-size:13px;font-weight:700;}
+.task-pts{font-size:11px;color:var(--gold);margin-top:1px;font-weight:700;}
+.task-pts.neg{color:var(--red);}
+.task-time{font-size:10px;color:var(--text-muted);margin-top:1px;}
+.task-actions{display:flex;gap:5px;}
+.tbtn{width:32px;height:32px;border-radius:50%;border:none;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.15s;}
+.tbtn:active{transform:scale(0.86);}
+.tbtn-ok{background:rgba(34,197,94,0.18);color:var(--green);}
+.tbtn-no{background:rgba(239,68,68,0.18);color:var(--red);}
+.tbtn-ok.on{background:var(--green);color:#fff;}
+.tbtn-no.on{background:var(--red);color:#fff;}
+.tbtn-pen{background:rgba(239,68,68,0.18);color:var(--red);}
+.tbtn-pen.on{background:var(--red);color:#fff;}
+
+/* TEAM TASK */
+.team-task-card{background:var(--card);border-radius:14px;padding:12px;border:1px solid #2A3A60;margin-bottom:8px;}
+.team-task-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.team-badge{background:linear-gradient(135deg,var(--purple),#4f46e5);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;}
+.team-task-name{font-size:13px;font-weight:800;flex:1;}
+.team-task-pts{font-size:11px;color:var(--green);font-weight:700;}
+.team-members-row{display:flex;gap:6px;flex-wrap:wrap;}
+.team-member-chip{display:flex;align-items:center;gap:5px;background:var(--card2);border-radius:8px;padding:4px 8px;border:1px solid var(--border);cursor:pointer;transition:all 0.2s;}
+.team-member-chip.done-chip{border-color:var(--green);background:rgba(34,197,94,0.1);}
+.tm-av{width:24px;height:24px;border-radius:50%;overflow:hidden;background:var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tm-av img,.tm-av svg{width:80%;height:80%;}
+.tm-av img{width:100%;height:100%;object-fit:cover;}
+.tm-name{font-size:11px;font-weight:700;}
+.team-progress-wrap{margin-top:8px;}
+.team-prog-bar{height:5px;background:var(--border);border-radius:4px;overflow:hidden;}
+.team-prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--green));transition:width 0.5s ease;}
+.team-prog-label{font-size:10px;color:var(--text-muted);margin-top:3px;text-align:left;}
+
+/* PENALTY SECTION */
+.penalty-section{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:12px;margin-top:16px;}
+.penalty-title{font-size:12px;font-weight:800;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+
+/* GOAL SECTION */
+.goal-section{background:rgba(59,111,255,0.06);border:1px solid rgba(59,111,255,0.2);border-radius:14px;padding:12px;margin-bottom:14px;}
+.goal-section-title{font-size:12px;font-weight:800;color:var(--blue-light);margin-bottom:8px;}
+.goal-display{font-size:13px;font-weight:700;padding:8px 12px;background:var(--card2);border-radius:10px;display:flex;align-items:center;justify-content:space-between;}
+.goal-empty{font-size:12px;color:var(--text-muted);font-style:italic;}
+
+/* ADD SECTION */
+.add-section{background:var(--card);border-radius:16px;padding:14px;border:1px solid var(--border);margin-top:14px;}
+.add-title{font-size:13px;font-weight:800;margin-bottom:10px;color:var(--gold);}
+.fi{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:14px;outline:none;margin-bottom:8px;transition:border-color 0.2s;}
+.fi:focus{border-color:var(--blue-light);}
+.fi::placeholder{color:var(--text-muted);}
+.sel-fi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;}
+.row2{display:flex;gap:7px;margin-bottom:8px;}
+.row2 .fi{margin-bottom:0;}
+.emoji-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;}
+.epick{font-size:19px;padding:4px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all 0.15s;}
+.epick.sel{border-color:var(--gold);background:rgba(245,197,24,0.1);}
+.btn-p{width:100%;padding:11px;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+.btn-p:active{opacity:0.85;}
+.btn-red{background:linear-gradient(135deg,#b91c1c,var(--red));}
+.btn-green{background:linear-gradient(135deg,#16a34a,var(--green));}
+.btn-purple{background:linear-gradient(135deg,#6d28d9,var(--purple));}
+
+/* CHILDREN PAGE */
+.children-list{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.child-card{background:var(--card);border-radius:14px;padding:13px;border:1px solid var(--border);display:flex;align-items:center;gap:11px;}
+.child-av-lg{width:50px;height:50px;border-radius:50%;overflow:hidden;border:2px solid var(--border);background:var(--card2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.child-av-lg img{width:100%;height:100%;object-fit:cover;}
+.child-av-lg svg{width:85%;height:85%;}
+.child-card-info{flex:1;}
+.child-card-name{font-size:14px;font-weight:800;}
+.child-card-age{font-size:11px;color:var(--text-muted);}
+.child-card-pts{font-size:12px;color:var(--gold);font-weight:700;margin-top:2px;}
+.child-card-goal{font-size:11px;color:var(--blue-light);margin-top:2px;}
+.icdel{width:32px;height:32px;border-radius:50%;border:none;background:rgba(239,68,68,0.12);color:var(--red);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* AVATAR PICKER */
+.av-pick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px;}
+.av-item{aspect-ratio:1;border-radius:11px;overflow:hidden;border:2px solid var(--border);background:var(--card2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;padding:5px;}
+.av-item svg{width:100%;height:100%;}
+.av-item.sel{border-color:var(--gold);box-shadow:0 0 10px rgba(245,197,24,0.35);background:rgba(245,197,24,0.07);}
+.av-item img{width:100%;height:100%;object-fit:cover;border-radius:7px;}
+.upload-av-btn{width:100%;padding:9px;background:transparent;border:2px dashed var(--border);border-radius:11px;color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:9px;transition:all 0.2s;}
+
+/* SETTINGS PAGE */
+.btn-ghost{width:100%;padding:10px;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text-muted);font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;margin-top:9px;transition:all 0.2s;}
+
+/* CHILD VIEW (mode) */
+.child-view-overlay{position:fixed;inset:0;z-index:500;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;}
+.child-view-overlay.show{display:flex;}
+.cv-header{background:linear-gradient(135deg,#0d1f6e,#2d0b6b);padding:30px 20px 50px;text-align:center;position:relative;}
+.cv-header::after{content:'';position:absolute;bottom:-20px;left:-5%;right:-5%;height:40px;background:var(--bg);border-radius:50% 50% 0 0/100%;}
+.cv-avatar{width:90px;height:90px;border-radius:50%;overflow:hidden;border:4px solid var(--gold);margin:0 auto 10px;background:var(--card2);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(245,197,24,0.4);}
+.cv-avatar img{width:100%;height:100%;object-fit:cover;}
+.cv-avatar svg{width:85%;height:85%;}
+.cv-name{font-size:24px;font-weight:900;position:relative;}
+.cv-pts{font-size:15px;color:var(--gold);font-weight:700;position:relative;margin-top:3px;}
+.cv-goal-box{background:rgba(59,111,255,0.15);border:1px solid rgba(59,111,255,0.3);border-radius:12px;padding:10px 14px;margin:12px 16px 0;text-align:center;position:relative;}
+.cv-goal-label{font-size:11px;color:var(--blue-light);margin-bottom:2px;}
+.cv-goal-text{font-size:14px;font-weight:700;}
+.cv-body{padding:20px 16px;flex:1;}
+.cv-section-title{font-size:14px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.cv-task-card{background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cv-task-card.done{border-color:var(--green);background:rgba(34,197,94,0.08);}
+.cv-task-card.failed{border-color:var(--red);opacity:0.6;}
+.cv-tick{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.cv-tick.done-tick{background:var(--green);border-color:var(--green);}
+.cv-tick.fail-tick{background:var(--red);border-color:var(--red);}
+.cv-close{position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cv-penalty-card{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cv-team-card{background:var(--card);border-radius:14px;padding:12px 14px;border:1px solid rgba(139,92,246,0.3);margin-bottom:8px;}
+
+/* MODAL / OVERLAY */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:600;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--card);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:480px;border-top:1px solid var(--border);animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:14px;text-align:center;}
+
+/* CELEBRATION */
+.celebrate{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.celebrate.show{display:flex;}
+.cel-box{background:var(--card);border-radius:24px;padding:28px 22px;max-width:300px;width:92%;border:2px solid var(--gold);text-align:center;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0.4);opacity:0}to{transform:scale(1);opacity:1}}
+.cel-av{width:78px;height:78px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin:0 auto 10px;background:var(--card2);display:flex;align-items:center;justify-content:center;}
+.cel-av img{width:100%;height:100%;object-fit:cover;}
+.cel-av svg{width:85%;height:85%;}
+.cel-title{font-size:20px;font-weight:900;color:var(--gold);}
+.cel-msg{font-size:13px;color:var(--text-muted);margin:5px 0 3px;}
+.cel-pts{font-size:30px;font-weight:900;color:var(--green);}
+.cel-icon{font-size:28px;margin-bottom:3px;}
+.cel-pts.neg-pts{color:var(--red);}
+
+.confetti-c{position:fixed;inset:0;pointer-events:none;z-index:998;overflow:hidden;}
+.cp{position:absolute;border-radius:2px;animation:cfall linear forwards;}
+@keyframes cfall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+
+.empty-st{text-align:center;padding:26px 16px;color:var(--text-muted);}
+.empty-st .ei{font-size:42px;margin-bottom:9px;}
+.empty-st p{font-size:13px;}
+.progress-bar{height:3px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:4px;}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue-light),var(--gold));transition:width 0.6s ease;}
+.divider{height:1px;background:var(--border);margin:14px 0;}
+</style>
+</head>
+<body>
+<div class="confetti-c" id="confettiC"></div>
+
+<!-- WEEKLY WINNER -->
+<div class="celebrate" id="weekWinOverlay">
+  <div class="cel-box" onclick="event.stopPropagation()" style="border-color:#FFD700;max-width:320px">
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">🎊 بطل الأسبوع</div>
+    <div class="cel-av" id="wwAv" style="width:88px;height:88px;border-width:4px"></div>
+    <div style="font-size:26px;font-weight:900;color:#FFD700;margin:8px 0 3px" id="wwName"></div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:5px" id="wwPts"></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">مبارك عليك الفوز! 🌟</div>
+    <button class="btn-p" onclick="confirmResetWeek()" style="background:linear-gradient(135deg,#FFD700,#FF6B35);color:#000">🏆 إبدأ أسبوعاً جديداً</button>
+  </div>
+</div>
+
+<!-- CELEBRATION -->
+<div class="celebrate" id="celOverlay" onclick="this.classList.remove('show')">
+  <div class="cel-box" onclick="event.stopPropagation()">
+    <div class="cel-av" id="celAv"></div>
+    <div class="cel-icon" id="celIcon">🌟</div>
+    <div class="cel-title" id="celName">أحسنت!</div>
+    <div class="cel-msg" id="celMsg">أنجزت المهمة</div>
+    <div class="cel-pts" id="celPts">+10 ⭐</div>
+    <button class="btn-p" style="margin-top:14px" onclick="document.getElementById('celOverlay').classList.remove('show')">رائع! 🎉</button>
+  </div>
+</div>
+
+<!-- PENALTY ALERT -->
+<div class="celebrate" id="penOverlay" onclick="this.classList.remove('show')">
+  <div class="cel-box" onclick="event.stopPropagation()" style="border-color:var(--red)">
+    <div class="cel-av" id="penAv"></div>
+    <div style="font-size:32px;margin-bottom:4px">😔</div>
+    <div class="cel-title" style="color:var(--red)" id="penName">تم خصم نقاط</div>
+    <div class="cel-msg" id="penMsg">سلوك سلبي</div>
+    <div class="cel-pts neg-pts" id="penPts">-10 نقطة</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:6px">يمكنك التحسّن غداً 💪</div>
+    <button class="btn-p btn-red" style="margin-top:14px" onclick="document.getElementById('penOverlay').classList.remove('show')">حسناً</button>
+  </div>
+</div>
+
+<!-- TEAM CELEBRATION -->
+<div class="celebrate" id="teamCelOverlay" onclick="this.classList.remove('show')">
+  <div class="cel-box" onclick="event.stopPropagation()" style="border-color:var(--purple)">
+    <div style="font-size:48px;margin-bottom:8px">🎊</div>
+    <div class="cel-title" style="color:var(--purple)">الفريق أنجز المهمة!</div>
+    <div class="cel-msg" id="teamCelMsg">مبارك للجميع</div>
+    <div class="cel-pts" style="color:var(--purple)" id="teamCelPts">+20 لكل واحد</div>
+    <button class="btn-p btn-purple" style="margin-top:14px" onclick="document.getElementById('teamCelOverlay').classList.remove('show')">يلا نكمل 🚀</button>
+  </div>
+</div>
+
+<!-- GOAL MODAL -->
+<div class="modal-overlay" id="goalModal">
+  <div class="modal-box">
+    <div class="modal-title">🎯 هدف الأسبوع</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;text-align:center" id="goalModalChildName"></div>
+    <input class="fi" id="goalInput" placeholder="اكتب هدفك لهذا الأسبوع...">
+    <button class="btn-p" onclick="saveGoal()">حفظ الهدف</button>
+    <button class="btn-ghost" style="margin-top:8px" onclick="closeGoalModal()">إلغاء</button>
+  </div>
+</div>
+
+<!-- CHILD VIEW SCREEN -->
+<div class="child-view-overlay" id="childViewOverlay">
+  <div class="cv-header">
+    <button class="cv-close" onclick="closeChildView()">✕</button>
+    <div class="cv-avatar" id="cvAvatar"></div>
+    <div class="cv-name" id="cvName"></div>
+    <div class="cv-pts" id="cvPts"></div>
+  </div>
+  <div id="cvGoalBox"></div>
+  <div class="cv-body" id="cvBody"></div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app">
+  <div class="header">
+    <h1>🏆 البطل <span>الأسبوعي</span></h1>
+    <p>نحفّز أبطالنا الصغار كل أسبوع</p>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showPage('leaderboard',this)"><span class="ni">🏅</span><span>المتصدرون</span></button>
+    <button class="nav-btn" onclick="showPage('tasks',this)"><span class="ni">✅</span><span>المهام</span></button>
+    <button class="nav-btn" onclick="showPage('team',this)"><span class="ni">🤝</span><span>الفريق</span></button>
+    <button class="nav-btn" onclick="showPage('children',this)"><span class="ni">👧</span><span>الأطفال</span></button>
+    <button class="nav-btn" onclick="showPage('settings',this)"><span class="ni">⚙️</span><span>الإعدادات</span></button>
+  </nav>
+
+  <!-- LEADERBOARD -->
+  <div class="page active" id="page-leaderboard">
+    <div class="sec-title"><div class="dot"></div>المنافسة الأسبوعية 🥇</div>
+    <div class="chart-wrap" id="chartWrap"><div class="chart-title">نقاط البطولة الأسبوعية</div><div class="bars-container" id="barsContainer"></div></div>
+    <div class="sec-title"><div class="dot"></div>الترتيب</div>
+    <div class="rank-list" id="rankList"></div>
+    <div class="sec-title" style="margin-top:14px"><div class="dot"></div>إحصائيات اليوم</div>
+    <div class="stats-row" id="statsRow"></div>
+  </div>
+
+  <!-- TASKS PAGE -->
+  <div class="page" id="page-tasks">
+    <div class="sec-title"><div class="dot"></div>اختر الطفل</div>
+    <div class="child-chips-row" id="childChips"></div>
+
+    <!-- GOAL BOX -->
+    <div class="goal-section" id="goalSection" style="display:none">
+      <div class="goal-section-title">🎯 هدف الأسبوع</div>
+      <div id="goalDisplay"></div>
+    </div>
+
+    <div class="sec-title"><div class="dot"></div>اختر اليوم</div>
+    <div class="day-selector" id="daySelector"></div>
+    <div class="sec-title"><div class="dot"></div>✅ مهام اليوم</div>
+    <div id="taskList" class="task-list"></div>
+
+    <!-- PENALTY LIST -->
+    <div class="penalty-section" id="penaltySection">
+      <div class="penalty-title">⚠️ السلوكيات السلبية</div>
+      <div id="penaltyList" class="task-list"></div>
+    </div>
+
+    <!-- ADD CUSTOM TASK -->
+    <div class="add-section">
+      <div class="add-title">➕ إضافة مهمة اليوم</div>
+      <div class="emoji-row" id="emojiPicker"></div>
+      <input class="fi" id="newTaskName" placeholder="اسم المهمة...">
+      <div class="row2">
+        <select class="sel-fi" id="newTaskPts"><option value="5">5 نقاط</option><option value="10" selected>10 نقاط</option><option value="15">15 نقاط</option><option value="20">20 نقاط</option><option value="25">25 نقاط</option></select>
+        <select class="sel-fi" id="newTaskDay"><option value="all">كل يوم</option><option value="0">الأحد</option><option value="1">الإثنين</option><option value="2">الثلاثاء</option><option value="3">الأربعاء</option><option value="4">الخميس</option><option value="5">الجمعة</option><option value="6">السبت</option></select>
+      </div>
+      <button class="btn-p" onclick="addCustomTask()">إضافة المهمة</button>
+    </div>
+
+    <!-- OPEN CHILD VIEW -->
+    <div style="margin-top:12px">
+      <button class="btn-p btn-green" onclick="openChildView(selectedChild)">👁️ عرض شاشة الطفل</button>
+    </div>
+  </div>
+
+  <!-- TEAM PAGE -->
+  <div class="page" id="page-team">
+    <div class="sec-title"><div class="dot"></div>مهام الفريق 🤝</div>
+    <div id="teamTasksList"></div>
+    <div class="add-section">
+      <div class="add-title">➕ إضافة مهمة جماعية</div>
+      <div class="emoji-row" id="teamEmojiPicker"></div>
+      <input class="fi" id="teamTaskName" placeholder="اسم المهمة الجماعية...">
+      <div class="row2">
+        <select class="sel-fi" id="teamTaskPts"><option value="10">10 لكل</option><option value="15" selected>15 لكل</option><option value="20">20 لكل</option><option value="25">25 لكل</option><option value="30">30 لكل</option></select>
+        <select class="sel-fi" id="teamTaskDay"><option value="all">كل يوم</option><option value="0">الأحد</option><option value="1">الإثنين</option><option value="2">الثلاثاء</option><option value="3">الأربعاء</option><option value="4">الخميس</option><option value="5">الجمعة</option><option value="6">السبت</option></select>
+      </div>
+      <button class="btn-p btn-purple" onclick="addTeamTask()">إضافة للفريق</button>
+    </div>
+  </div>
+
+  <!-- CHILDREN PAGE -->
+  <div class="page" id="page-children">
+    <div class="sec-title"><div class="dot"></div>قائمة الأطفال</div>
+    <div class="children-list" id="childrenList"></div>
+    <div class="add-section">
+      <div class="add-title">👶 إضافة طفل جديد</div>
+      <input type="file" id="photoUpload" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+      <button class="upload-av-btn" onclick="document.getElementById('photoUpload').click()">📷 رفع صورة من المعرض</button>
+      <div id="uploadPreview" style="display:none;margin-bottom:9px;text-align:center">
+        <img id="uploadedImg" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)">
+        <div style="font-size:11px;color:var(--gold);margin-top:3px">✓ تم رفع الصورة</div>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-align:center">— أو اختر أفتار —</div>
+      <div class="av-pick-grid" id="avatarGrid"></div>
+      <input class="fi" id="childName" placeholder="اسم الطفل...">
+      <input class="fi" id="childAge" placeholder="العمر (اختياري)..." type="number" min="2" max="18">
+      <button class="btn-p" onclick="addChild()">إضافة الطفل</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div class="page" id="page-settings">
+    <div class="sec-title"><div class="dot"></div>المهام الثابتة ✅</div>
+    <div id="defaultTasksList" class="task-list"></div>
+    <div class="add-section" style="margin-top:14px">
+      <div class="add-title">➕ إضافة مهمة ثابتة</div>
+      <div class="emoji-row" id="defEmojiPicker"></div>
+      <input class="fi" id="defTaskName" placeholder="اسم المهمة...">
+      <div class="row2">
+        <input class="fi" id="defTaskTime" placeholder="الوقت..." style="margin-bottom:0">
+        <select class="sel-fi" id="defTaskPts"><option value="5">5 نقاط</option><option value="10" selected>10 نقاط</option><option value="15">15 نقاط</option><option value="20">20 نقاط</option></select>
+      </div>
+      <button class="btn-p" onclick="addDefaultTask()" style="margin-top:8px">إضافة</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sec-title"><div class="dot"></div>السلوكيات السلبية ⚠️</div>
+    <div id="defaultPenaltiesList" class="task-list"></div>
+    <div class="add-section" style="margin-top:14px">
+      <div class="add-title" style="color:var(--red)">➕ إضافة سلوك سلبي</div>
+      <div class="emoji-row" id="penEmojiPicker"></div>
+      <input class="fi" id="penName" placeholder="اسم السلوك السلبي...">
+      <select class="sel-fi" id="penPts" style="width:100%;margin-bottom:8px"><option value="5">-5 نقاط</option><option value="10" selected>-10 نقاط</option><option value="15">-15 نقاط</option><option value="20">-20 نقاط</option></select>
+      <button class="btn-p btn-red" onclick="addDefaultPenalty()">إضافة</button>
+    </div>
+
+    <div class="divider"></div>
+    <button class="btn-ghost" onclick="resetWeek()">🔄 إعلان البطل وإعادة تعيين الأسبوع</button>
+    <button class="btn-ghost" style="color:var(--red);border-color:var(--red)" onclick="resetAll()">🗑️ حذف كل البيانات</button>
+  </div>
+</div>
+
+<script>
+// ==================== SVG AVATARS ====================
+const AVATARS = [
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#1a0a2e"/><circle cx="50" cy="55" r="28" fill="#FFDAB5"/><ellipse cx="50" cy="82" rx="20" ry="12" fill="#FF6B00"/><rect x="35" y="70" width="30" height="18" rx="4" fill="#FF6B00"/><path d="M22 45 Q20 25 50 28 Q80 25 78 45" fill="#FFD700" stroke="#cc9900" stroke-width="1.5"/><path d="M22 45 Q15 38 20 32 Q24 28 28 36 Q32 26 35 33 Q40 24 45 32 Q48 22 52 30 Q55 22 60 30 Q64 24 67 32 Q70 26 74 33 Q78 28 80 36 Q85 38 78 45" fill="#FFD700"/><circle cx="40" cy="52" r="5" fill="white"/><circle cx="60" cy="52" r="5" fill="white"/><circle cx="41" cy="53" r="3" fill="#1a6fff"/><circle cx="61" cy="53" r="3" fill="#1a6fff"/><circle cx="42" cy="52" r="1.5" fill="black"/><circle cx="62" cy="52" r="1.5" fill="black"/><path d="M44 63 Q50 68 56 63" stroke="#cc6666" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="35" y1="56" x2="45" y2="54" stroke="#cc8866" stroke-width="1.2"/><line x1="55" y1="54" x2="65" y2="56" stroke="#cc8866" stroke-width="1.2"/><circle cx="35" cy="59" r="3" fill="#ffb3b3" opacity="0.6"/><circle cx="65" cy="59" r="3" fill="#ffb3b3" opacity="0.6"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#1a0028"/><circle cx="50" cy="55" r="27" fill="#FFDAB5"/><path d="M23 50 Q22 25 50 26 Q78 25 77 50 Q75 30 50 32 Q25 30 23 50Z" fill="#FF69B4"/><path d="M23 50 Q20 60 22 70 Q18 55 20 45 Q22 30 35 26 Q28 35 23 50Z" fill="#FF1493"/><path d="M77 50 Q80 60 78 70 Q82 55 80 45 Q78 30 65 26 Q72 35 77 50Z" fill="#FF1493"/><path d="M30 70 Q28 78 32 82" stroke="#FF1493" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M70 70 Q72 78 68 82" stroke="#FF1493" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="40" cy="53" r="5" fill="white"/><circle cx="60" cy="53" r="5" fill="white"/><circle cx="41" cy="54" r="3" fill="#9333ea"/><circle cx="61" cy="54" r="3" fill="#9333ea"/><circle cx="42" cy="53" r="1.5" fill="black"/><circle cx="62" cy="53" r="1.5" fill="black"/><path d="M45 64 Q50 69 55 64" stroke="#FF69B4" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="37" cy="60" r="3.5" fill="#ffb3cc" opacity="0.7"/><circle cx="63" cy="60" r="3.5" fill="#ffb3cc" opacity="0.7"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#0a0a1a"/><circle cx="50" cy="55" r="27" fill="#FFDAB5"/><path d="M24 48 Q23 24 50 25 Q77 24 76 48" fill="#1a1a2e"/><path d="M24 48 Q18 40 22 30 Q30 20 40 22 Q45 18 50 20 Q55 18 60 22 Q70 20 78 30 Q82 40 76 48" fill="#16213e"/><path d="M30 35 L35 42 L30 48" fill="#0f3460" stroke="#1a6fff" stroke-width="0.5"/><path d="M70 35 L65 42 L70 48" fill="#0f3460" stroke="#1a6fff" stroke-width="0.5"/><rect x="36" y="72" width="28" height="15" rx="3" fill="#0f3460"/><circle cx="40" cy="53" r="5" fill="white"/><circle cx="60" cy="53" r="5" fill="white"/><circle cx="41" cy="54" r="3" fill="#1a6fff"/><circle cx="61" cy="54" r="3" fill="#1a6fff"/><circle cx="42" cy="53" r="1.5" fill="black"/><circle cx="62" cy="53" r="1.5" fill="black"/><path d="M45 64 Q50 68 55 64" stroke="#aaccff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#1a0a00"/><circle cx="50" cy="56" r="27" fill="#FFDAB5"/><path d="M26 46 Q25 22 50 23 Q75 22 74 46" fill="#2a1a00"/><path d="M26 46 Q20 36 24 26 Q32 16 50 18 Q68 16 76 26 Q80 36 74 46" fill="#3d2200"/><path d="M20 44 Q18 30 25 24 Q22 32 24 42 Z" fill="#5c3300"/><path d="M80 44 Q82 30 75 24 Q78 32 76 42 Z" fill="#5c3300"/><rect x="36" y="72" width="28" height="15" rx="3" fill="#cc6600"/><circle cx="40" cy="53" r="5.5" fill="white"/><circle cx="60" cy="53" r="5.5" fill="white"/><circle cx="41" cy="54" r="3.5" fill="#1a1a1a"/><circle cx="61" cy="54" r="3.5" fill="#1a1a1a"/><circle cx="40" cy="52" r="1.5" fill="white"/><circle cx="60" cy="52" r="1.5" fill="white"/><path d="M44 65 Q50 70 56 65" stroke="#cc6666" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#0d0020"/><circle cx="50" cy="56" r="26" fill="#FFE4C4"/><path d="M25 50 Q24 26 50 26 Q76 26 75 50" fill="#c084fc"/><path d="M25 50 Q22 60 24 70 Q19 52 22 40 Q26 26 38 24 Q30 34 25 50Z" fill="#7c3aed"/><path d="M75 50 Q78 60 76 70 Q81 52 78 40 Q74 26 62 24 Q70 34 75 50Z" fill="#7c3aed"/><polygon points="50,20 51.5,24 56,24 52.5,27 54,31 50,28.5 46,31 47.5,27 44,24 48.5,24" fill="#FFD700"/><circle cx="40" cy="53" r="5" fill="white"/><circle cx="60" cy="53" r="5" fill="white"/><circle cx="41" cy="54" r="3" fill="#7c3aed"/><circle cx="61" cy="54" r="3" fill="#7c3aed"/><circle cx="42" cy="53" r="1.5" fill="black"/><circle cx="62" cy="53" r="1.5" fill="black"/><path d="M45 64 Q50 69 55 64" stroke="#f9a8d4" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="37" cy="60" r="3.5" fill="#f9a8d4" opacity="0.7"/><circle cx="63" cy="60" r="3.5" fill="#f9a8d4" opacity="0.7"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#0a1a0a"/><circle cx="50" cy="55" r="27" fill="#FFDAB5"/><path d="M24 50 Q23 26 50 26 Q77 26 76 50" fill="#111"/><rect x="28" y="56" width="44" height="14" rx="7" fill="#1a1a1a"/><rect x="36" y="72" width="28" height="14" rx="3" fill="#1a1a1a"/><circle cx="40" cy="51" r="5.5" fill="white"/><circle cx="60" cy="51" r="5.5" fill="white"/><circle cx="41" cy="52" r="3.5" fill="#22c55e"/><circle cx="61" cy="52" r="3.5" fill="#22c55e"/><circle cx="42" cy="51" r="1.8" fill="black"/><circle cx="62" cy="51" r="1.8" fill="black"/><path d="M36 45 Q40 41 44 44" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M56 44 Q60 41 64 45" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="25" y="35" width="50" height="4" rx="2" fill="#111"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#1a0a14"/><circle cx="50" cy="57" r="28" fill="#FFE0B2"/><path d="M23 52 Q22 26 50 26 Q78 26 77 52" fill="#8B4513"/><path d="M23 52 Q20 65 22 75 Q16 54 19 40 Q24 24 40 22" fill="#6B3410"/><path d="M77 52 Q80 65 78 75 Q84 54 81 40 Q76 24 60 22" fill="#6B3410"/><circle cx="24" cy="60" r="7" fill="#FFE0B2"/><circle cx="76" cy="60" r="7" fill="#FFE0B2"/><rect x="37" y="74" width="26" height="14" rx="3" fill="#e91e8c"/><circle cx="40" cy="54" r="6" fill="white"/><circle cx="60" cy="54" r="6" fill="white"/><circle cx="41" cy="55" r="3.8" fill="#8B4513"/><circle cx="61" cy="55" r="3.8" fill="#8B4513"/><circle cx="42" cy="54" r="2" fill="black"/><circle cx="62" cy="54" r="2" fill="black"/><path d="M45 66 Q50 71 55 66" stroke="#cc4488" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="37" cy="62" r="4" fill="#ffaacc" opacity="0.65"/><circle cx="63" cy="62" r="4" fill="#ffaacc" opacity="0.65"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#050510"/><circle cx="50" cy="56" r="27" fill="#e0d0ff"/><path d="M24 48 Q23 22 50 22 Q77 22 76 48" fill="#0a0a2a"/><path d="M24 48 Q17 38 20 26 Q28 14 50 16 Q72 14 80 26 Q83 38 76 48" fill="#050520"/><line x1="35" y1="30" x2="65" y2="30" stroke="#00ffff" stroke-width="2" opacity="0.7"/><rect x="42" y="26" width="16" height="6" rx="2" fill="#0a0a2a" stroke="#00ffff" stroke-width="1"/><circle cx="40" cy="53" r="5.5" fill="#0a0a2a" stroke="#00ffff" stroke-width="1.5"/><circle cx="60" cy="53" r="5.5" fill="#0a0a2a" stroke="#00ffff" stroke-width="1.5"/><circle cx="40" cy="53" r="3.5" fill="#00ffff" opacity="0.9"/><circle cx="60" cy="53" r="3.5" fill="#ff00aa" opacity="0.9"/><circle cx="40" cy="53" r="1.8" fill="#050520"/><circle cx="60" cy="53" r="1.8" fill="#050520"/><path d="M45 64 Q50 68 55 64" stroke="#00ffff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#1a0800"/><circle cx="50" cy="55" r="32" fill="#cc8800" opacity="0.3"/><circle cx="50" cy="55" r="28" fill="#FFDAB5"/><path d="M18 55 Q16 35 22 28 Q20 38 22 52 Z" fill="#cc8800"/><path d="M82 55 Q84 35 78 28 Q80 38 78 52 Z" fill="#cc8800"/><path d="M22 30 Q28 18 40 20 Q32 24 28 34 Z" fill="#cc8800"/><path d="M78 30 Q72 18 60 20 Q68 24 72 34 Z" fill="#cc8800"/><path d="M30 20 Q40 12 50 14 Q60 12 70 20 Q60 16 50 17 Q40 16 30 20Z" fill="#cc8800"/><circle cx="40" cy="53" r="6" fill="white"/><circle cx="60" cy="53" r="6" fill="white"/><circle cx="41" cy="54" r="4" fill="#cc6600"/><circle cx="61" cy="54" r="4" fill="#cc6600"/><circle cx="42" cy="53" r="2.2" fill="black"/><circle cx="62" cy="53" r="2.2" fill="black"/><path d="M44 65 Q50 70 56 65" stroke="#cc4422" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#050a1a"/><circle cx="50" cy="55" r="27" fill="#FFE4C4"/><path d="M50 26 Q30 24 26 44 Q24 52 25 60 Q22 52 24 40 Q28 22 50 22 Q72 22 76 40 Q78 52 75 60 Q76 52 74 44 Q70 24 50 26Z" fill="#1a3a8a"/><path d="M50 22 Q30 20 24 36 Q30 28 50 28 Q70 28 76 36 Q70 20 50 22Z" fill="#2563eb"/><circle cx="22" cy="56" r="6" fill="#1a3a8a" stroke="#3b82f6" stroke-width="1.5"/><circle cx="78" cy="56" r="6" fill="#1a3a8a" stroke="#3b82f6" stroke-width="1.5"/><circle cx="40" cy="53" r="5.5" fill="white"/><circle cx="60" cy="53" r="5.5" fill="white"/><circle cx="41" cy="54" r="3.5" fill="#2563eb"/><circle cx="61" cy="54" r="3.5" fill="#2563eb"/><circle cx="42" cy="53" r="1.8" fill="black"/><circle cx="62" cy="53" r="1.8" fill="black"/><path d="M45 64 Q50 69 55 64" stroke="#93c5fd" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#0a0a14"/><circle cx="50" cy="56" r="26" fill="#FFDAB5"/><path d="M25 50 Q24 26 50 26 Q76 26 75 50" fill="#cc0000"/><path d="M25 50 Q20 40 23 28 Q28 18 50 20 Q72 18 77 28 Q80 40 75 50" fill="#8B0000"/><rect x="38" y="24" width="24" height="8" rx="2" fill="#8B0000" stroke="#cc0000" stroke-width="1"/><line x1="26" y1="34" x2="74" y2="34" stroke="#FFD700" stroke-width="1.5"/><rect x="36" y="72" width="28" height="14" rx="3" fill="#1a1a1a"/><circle cx="40" cy="53" r="5.5" fill="white"/><circle cx="60" cy="53" r="5.5" fill="white"/><circle cx="41" cy="54" r="3.5" fill="#1a1a1a"/><circle cx="61" cy="54" r="3.5" fill="#1a1a1a"/><circle cx="42" cy="53" r="1.8" fill="white"/><circle cx="62" cy="53" r="1.8" fill="white"/><path d="M44 64 Q50 69 56 64" stroke="#cc0000" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#120a1a"/><path d="M28 42 Q26 30 32 26 Q30 34 32 40 Z" fill="#ff9dce"/><path d="M72 42 Q74 30 68 26 Q70 34 68 40 Z" fill="#ff9dce"/><circle cx="50" cy="57" r="27" fill="#FFE4D0"/><path d="M24 50 Q23 28 50 28 Q77 28 76 50" fill="#ff9dce"/><path d="M24 50 Q20 42 22 30 Q28 20 50 22 Q72 20 78 30 Q80 42 76 50" fill="#ff6eb4"/><rect x="37" y="73" width="26" height="14" rx="3" fill="#ff6eb4"/><circle cx="40" cy="55" r="6" fill="white"/><circle cx="60" cy="55" r="6" fill="white"/><ellipse cx="40" cy="56" rx="3" ry="5" fill="#1a1a1a"/><ellipse cx="60" cy="56" rx="3" ry="5" fill="#1a1a1a"/><circle cx="39" cy="53.5" r="1.5" fill="white"/><circle cx="59" cy="53.5" r="1.5" fill="white"/><path d="M50 64 L50 68" stroke="#ff6eb4" stroke-width="1.5"/><path d="M50 68 Q47 70 44 69" stroke="#ff6eb4" stroke-width="1.5" fill="none"/><path d="M50 68 Q53 70 56 69" stroke="#ff6eb4" stroke-width="1.5" fill="none"/><circle cx="36" cy="60" r="3.5" fill="#ffb3cc" opacity="0.65"/><circle cx="64" cy="60" r="3.5" fill="#ffb3cc" opacity="0.65"/></svg>`
+];
+
+const BAR_COLORS=['#FFD700','#3B82F6','#22C55E','#EF4444','#A855F7','#F97316','#06B6D4','#EC4899','#84CC16','#8B5CF6','#F59E0B','#10B981'];
+const DAYS=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const TASK_EMOJIS=['⭐','🌟','🏆','🎯','📚','🦁','🚀','💪','🎨','⚽','🎮','🍎','🌙','🌞','🧹','🛁','🛏️','🙏','📖','🎵'];
+const PEN_EMOJIS=['😤','🗣️','📱','😡','🤬','💢','🙅','❌','⛔','😠','🤦','💔'];
+
+let state={
+  children:[],
+  defaultTasks:[
+    {id:'dt1',icon:'🌞',name:'الاستيقاظ المبكر',time:'٦:٣٠ صباحاً',points:10},
+    {id:'dt2',icon:'🧹',name:'ترتيب الغرفة',time:'٧:٠٠ صباحاً',points:10},
+    {id:'dt3',icon:'📚',name:'المذاكرة',time:'٤:٠٠ مساءً',points:15},
+    {id:'dt4',icon:'🙏',name:'الصلاة في وقتها',time:'الفرائض',points:20},
+    {id:'dt5',icon:'🛁',name:'النظافة الشخصية',time:'يومياً',points:5},
+    {id:'dt6',icon:'🛏️',name:'النوم المبكر',time:'٩:٠٠ مساءً',points:10},
+  ],
+  defaultPenalties:[
+    {id:'dp1',icon:'😤',name:'العقوق وعدم الطاعة',points:15},
+    {id:'dp2',icon:'🗣️',name:'الكذب',points:20},
+    {id:'dp3',icon:'📱',name:'كثرة الشاشات بدون إذن',points:10},
+    {id:'dp4',icon:'😡',name:'الشجار مع الإخوة',points:10},
+  ],
+  customTasks:[],
+  teamTasks:[],
+  progress:{},      // childId__date__taskId => 'done'|'failed'
+  penalties:{},     // childId__date__penId => true
+  teamProgress:{},  // teamTaskId__date__childId => true
+  goals:{},         // childId => string
+};
+
+let selectedChild=null,selectedDay=new Date().getDay();
+let selTaskEmoji='⭐',selDefEmoji='⭐',selPenEmoji='😤',selTeamEmoji='🤝';
+let selAvatarIdx=0,uploadedPhotoData=null;
+let goalModalChildId=null;
+
+function loadState(){const s=localStorage.getItem('batal3_state');if(s)state=JSON.parse(s);}
+function saveState(){localStorage.setItem('batal3_state',JSON.stringify(state));}
+
+function dayKey(dayIndex){
+  const today=new Date(),diff=dayIndex-today.getDay(),t=new Date(today);
+  t.setDate(today.getDate()+diff);
+  return `${t.getFullYear()}-${t.getMonth()}-${t.getDate()}`;
+}
+function todayDayKey(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;}
+function progressKey(cid,dayIdx,tid){return `${cid}__${dayKey(dayIdx)}__${tid}`;}
+function penKey(cid,dayIdx,pid){return `${cid}__${dayKey(dayIdx)}__${pid}`;}
+function teamKey(tid,dayIdx,cid){return `${tid}__${dayKey(dayIdx)}__${cid}`;}
+
+function init(){
+  loadState();
+  if(state.children.length>0) selectedChild=state.children[0].id;
+  const now=new Date();
+  document.getElementById('headerDate').textContent=now.toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  buildDaySelector();
+  buildEmojiPicker('emojiPicker',TASK_EMOJIS,v=>selTaskEmoji=v);
+  buildEmojiPicker('defEmojiPicker',TASK_EMOJIS,v=>selDefEmoji=v);
+  buildEmojiPicker('penEmojiPicker',PEN_EMOJIS,v=>selPenEmoji=v,PEN_EMOJIS[0]);
+  buildEmojiPicker('teamEmojiPicker',TASK_EMOJIS,v=>selTeamEmoji=v);
+  buildAvatarGrid();
+  renderAll();
+}
+
+function renderAll(){
+  renderLeaderboard();renderChildChips();renderTaskList();
+  renderPenaltyList();renderChildrenList();renderDefaultTasks();
+  renderDefaultPenalties();renderTeamTasks();updateGoalSection();
+}
+
+// ==================== LEADERBOARD ====================
+function getAvatarHtml(child){
+  if(child.photo) return `<img src="${child.photo}" style="width:100%;height:100%;object-fit:cover">`;
+  return AVATARS[(child.avatarIdx||0)%AVATARS.length];
+}
+
+function renderLeaderboard(){
+  const sorted=[...state.children].sort((a,b)=>(b.points||0)-(a.points||0));
+  const maxPts=sorted.length>0?Math.max(sorted[0].points||0,1):1;
+  const chartWrap=document.getElementById('chartWrap');
+
+  if(!sorted.length){
+    chartWrap.innerHTML=`<div class="empty-st"><div class="ei">🏆</div><p>أضف أطفالك لترى المنافسة هنا</p></div>`;
+    document.getElementById('rankList').innerHTML='';
+    document.getElementById('statsRow').innerHTML='';
+    return;
+  }
+
+  chartWrap.innerHTML=`<div class="chart-title">نقاط البطولة الأسبوعية</div><div class="bars-container" id="barsContainer"></div>`;
+  const bc=document.getElementById('barsContainer');
+  sorted.forEach((c,i)=>{
+    const pct=Math.max(8,Math.round(((c.points||0)/maxPts)*155));
+    const color=BAR_COLORS[state.children.findIndex(x=>x.id===c.id)%BAR_COLORS.length];
+    const rc=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    bc.innerHTML+=`<div class="bar-col" onclick="goToChildTasks('${c.id}')">
+      <div class="bar-pts">${c.points||0}</div>
+      <div class="bar-avatar-wrap ${rc}">${getAvatarHtml(c)}</div>
+      <div class="bar-track"><div class="bar-fill" style="height:${pct}px;background:linear-gradient(180deg,${color},${color}88)"></div></div>
+      <div class="bar-name">${c.name}</div>
+    </div>`;
+  });
+
+  document.getElementById('rankList').innerHTML=sorted.map((c,i)=>{
+    const medals=['🥇','🥈','🥉'];
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+    const todayDone=countTodayDone(c.id);
+    const totalT=getAllTasksForDay(new Date().getDay()).length;
+    const streak=getStreak(c.id);
+    const goal=state.goals[c.id]||'';
+    return `<div class="rank-row ${rc}" onclick="goToChildTasks('${c.id}')">
+      <div class="rank-medal">${medals[i]||i+1}</div>
+      <div class="rank-av">${getAvatarHtml(c)}</div>
+      <div class="rank-info">
+        <div class="rank-name">${c.name}</div>
+        <div class="rank-sub">${todayDone}/${totalT} مهام اليوم</div>
+        ${streak>1?`<div class="streak-badge">🔥 ${streak} أيام</div>`:''}
+        ${goal?`<div class="goal-chip">🎯 ${goal}</div>`:''}
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(((c.points||0)/maxPts)*100)}%"></div></div>
+      </div>
+      <div class="pts-pill">${c.points||0}</div>
+    </div>`;
+  }).join('');
+
+  const day=new Date().getDay(),allT=getAllTasksForDay(day);
+  let totalDone=0;state.children.forEach(c=>totalDone+=countTodayDone(c.id));
+  const totalPts=state.children.reduce((s,c)=>s+(c.points||0),0);
+  const totalPen=Object.keys(state.penalties).filter(k=>k.includes(todayDayKey())).length;
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="stat-num c-green">${totalDone}</div><div class="stat-label">أُنجز اليوم</div></div>
+    <div class="stat-card"><div class="stat-num c-gold">${totalPts}</div><div class="stat-label">مجموع النقاط</div></div>
+    <div class="stat-card"><div class="stat-num c-red">${totalPen}</div><div class="stat-label">خصومات اليوم</div></div>`;
+}
+
+function countTodayDone(cid){
+  const day=new Date().getDay();
+  return getAllTasksForDay(day).filter(t=>state.progress[progressKey(cid,day,t.id)]==='done').length;
+}
+function getStreak(cid){
+  let s=0;
+  for(let i=0;i<30;i++){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const tasks=getAllTasksForDay(d.getDay());
+    if(!tasks.length) continue;
+    const done=tasks.filter(t=>{
+      const k=`${cid}__${d.getFullYear()}-${d.getMonth()}-${d.getDate()}__${t.id}`;
+      return state.progress[k]==='done';
+    }).length;
+    if(done>0)s++;else if(i>0)break;
+  }
+  return s;
+}
+function goToChildTasks(cid){selectedChild=cid;selectedDay=new Date().getDay();showPage('tasks',document.querySelectorAll('.nav-btn')[1]);}
+
+// ==================== DAY SELECTOR ====================
+function buildDaySelector(){
+  document.getElementById('daySelector').innerHTML=DAYS.map((d,i)=>
+    `<button class="day-btn ${i===selectedDay?'active':''}" onclick="selectDay(${i},this)">${d}</button>`
+  ).join('');
+}
+function selectDay(idx,el){
+  selectedDay=idx;
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderTaskList();renderPenaltyList();
+}
+
+// ==================== CHILD CHIPS ====================
+function renderChildChips(){
+  const cont=document.getElementById('childChips');
+  if(!state.children.length){cont.innerHTML=`<div style="color:var(--text-muted);font-size:12px;padding:8px">أضف أطفالك أولاً</div>`;return;}
+  cont.innerHTML=state.children.map(c=>`
+    <div class="cchip ${c.id===selectedChild?'sel':''}" onclick="selectChild('${c.id}')">
+      <div class="cchip-av">${getAvatarHtml(c)}</div>
+      <div class="cchip-name">${c.name}</div>
+    </div>`).join('');
+  updateGoalSection();
+}
+function selectChild(id){selectedChild=id;renderChildChips();renderTaskList();renderPenaltyList();}
+
+// ==================== GOAL ====================
+function updateGoalSection(){
+  const sec=document.getElementById('goalSection');
+  const disp=document.getElementById('goalDisplay');
+  if(!selectedChild){sec.style.display='none';return;}
+  sec.style.display='block';
+  const goal=state.goals[selectedChild]||'';
+  if(goal){
+    disp.innerHTML=`<div class="goal-display"><span>🎯 ${goal}</span><button onclick="openGoalModal('${selectedChild}')" style="background:none;border:none;color:var(--blue-light);font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700">تغيير</button></div>`;
+  } else {
+    disp.innerHTML=`<div class="goal-empty" onclick="openGoalModal('${selectedChild}')" style="cursor:pointer;padding:8px 0">+ اضغط لتحديد هدف هذا الأسبوع</div>`;
+  }
+}
+function openGoalModal(cid){
+  goalModalChildId=cid;
+  const c=state.children.find(x=>x.id===cid);
+  document.getElementById('goalModalChildName').textContent=c?`هدف ${c.name} لهذا الأسبوع`:'';
+  document.getElementById('goalInput').value=state.goals[cid]||'';
+  document.getElementById('goalModal').classList.add('show');
+}
+function closeGoalModal(){document.getElementById('goalModal').classList.remove('show');}
+function saveGoal(){
+  const val=document.getElementById('goalInput').value.trim();
+  if(!goalModalChildId) return;
+  if(val) state.goals[goalModalChildId]=val;
+  else delete state.goals[goalModalChildId];
+  saveState();closeGoalModal();updateGoalSection();renderLeaderboard();renderChildrenList();
+}
+
+// ==================== TASKS ====================
+function getAllTasksForDay(dayIdx){
+  return [...state.defaultTasks,...state.customTasks.filter(t=>t.day==='all'||parseInt(t.day)===dayIdx)];
+}
+function renderTaskList(){
+  const cont=document.getElementById('taskList');
+  if(!selectedChild){cont.innerHTML=`<div class="empty-st"><div class="ei">👆</div><p>اختر طفلاً أولاً</p></div>`;return;}
+  const tasks=getAllTasksForDay(selectedDay);
+  if(!tasks.length){cont.innerHTML=`<div class="empty-st"><div class="ei">📭</div><p>لا توجد مهام</p></div>`;return;}
+  cont.innerHTML=tasks.map(t=>{
+    const pk=progressKey(selectedChild,selectedDay,t.id);
+    const st=state.progress[pk];
+    return `<div class="task-card ${st||''}">
+      <span class="task-icon">${t.icon}</span>
+      <div class="task-body">
+        <div class="task-name">${t.name}</div>
+        <div class="task-pts">+${t.points} نقطة</div>
+        ${t.time?`<div class="task-time">⏰ ${t.time}</div>`:''}
+      </div>
+      <div class="task-actions">
+        <button class="tbtn tbtn-ok ${st==='done'?'on':''}" onclick="setProgress('${t.id}','done','${t.name}',${t.points},'${t.icon}')">✓</button>
+        <button class="tbtn tbtn-no ${st==='failed'?'on':''}" onclick="setProgress('${t.id}','failed','${t.name}',${t.points},'${t.icon}')">✗</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setProgress(tid,status,tname,pts,icon){
+  if(!selectedChild) return;
+  const pk=progressKey(selectedChild,selectedDay,tid);
+  const prev=state.progress[pk];
+  if(prev===status){delete state.progress[pk];if(status==='done')adjustPts(selectedChild,-pts);}
+  else{
+    if(prev==='done') adjustPts(selectedChild,-pts);
+    state.progress[pk]=status;
+    if(status==='done'){adjustPts(selectedChild,pts);showCelebration(selectedChild,tname,pts,icon);}
+  }
+  saveState();renderTaskList();renderLeaderboard();
+}
+
+// ==================== PENALTIES ====================
+function renderPenaltyList(){
+  const cont=document.getElementById('penaltyList');
+  if(!state.defaultPenalties.length){cont.innerHTML='';return;}
+  cont.innerHTML=state.defaultPenalties.map(p=>{
+    const pk=penKey(selectedChild||'',selectedDay,p.id);
+    const active=selectedChild&&state.penalties[pk];
+    return `<div class="task-card penalty ${active?'failed':''}">
+      <span class="task-icon">${p.icon}</span>
+      <div class="task-body">
+        <div class="task-name">${p.name}</div>
+        <div class="task-pts neg">-${p.points} نقطة</div>
+      </div>
+      <div class="task-actions">
+        <button class="tbtn tbtn-pen ${active?'on':''}" onclick="togglePenalty('${p.id}','${p.name}',${p.points},'${p.icon}')" ${!selectedChild?'disabled':''}>⚠️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togglePenalty(pid,pname,pts,icon){
+  if(!selectedChild) return;
+  const pk=penKey(selectedChild,selectedDay,pid);
+  if(state.penalties[pk]){
+    delete state.penalties[pk];
+    adjustPts(selectedChild,pts);
+  } else {
+    state.penalties[pk]=true;
+    adjustPts(selectedChild,-pts);
+    showPenalty(selectedChild,pname,pts,icon);
+  }
+  saveState();renderPenaltyList();renderLeaderboard();
+}
+
+function showPenalty(cid,pname,pts,icon){
+  const c=state.children.find(x=>x.id===cid);if(!c) return;
+  document.getElementById('penAv').innerHTML=getAvatarHtml(c);
+  document.getElementById('penName').textContent=c.name;
+  document.getElementById('penMsg').textContent=pname;
+  document.getElementById('penPts').textContent=`-${pts} نقطة`;
+  document.getElementById('penOverlay').classList.add('show');
+}
+
+// ==================== TEAM TASKS ====================
+function renderTeamTasks(){
+  const cont=document.getElementById('teamTasksList');
+  if(!state.teamTasks.length){
+    cont.innerHTML=`<div class="empty-st"><div class="ei">🤝</div><p>أضف مهمة جماعية يُنجزها الأطفال معاً</p></div>`;
+    return;
+  }
+  const today=new Date().getDay();
+  cont.innerHTML=state.teamTasks.map(tt=>{
+    if(tt.day!=='all'&&parseInt(tt.day)!==today) return '';
+    const doneMembers=state.children.filter(c=>state.teamProgress[teamKey(tt.id,today,c.id)]);
+    const total=state.children.length;
+    const pct=total>0?Math.round((doneMembers.length/total)*100):0;
+    const allDone=total>0&&doneMembers.length===total;
+    return `<div class="team-task-card" style="${allDone?'border-color:var(--green);background:rgba(34,197,94,0.06)':''}">
+      <div class="team-task-header">
+        <span style="font-size:20px">${tt.icon}</span>
+        <div class="team-task-name">${tt.name}</div>
+        <span class="team-badge">فريق</span>
+        <span class="team-task-pts">+${tt.points} لكل</span>
+        <button onclick="deleteTeamTask('${tt.id}')" style="background:none;border:none;color:var(--text-muted);font-size:14px;cursor:pointer;padding:2px">🗑️</button>
+      </div>
+      <div class="team-members-row">${state.children.map(c=>{
+        const done=!!state.teamProgress[teamKey(tt.id,today,c.id)];
+        return `<div class="team-member-chip ${done?'done-chip':''}" onclick="toggleTeamMember('${tt.id}','${c.id}',${tt.points},'${tt.name}','${tt.icon}')">
+          <div class="tm-av">${getAvatarHtml(c)}</div>
+          <span class="tm-name" style="color:${done?'var(--green)':'var(--text-muted)'}">${c.name}</span>
+          ${done?'<span style="color:var(--green);font-size:11px">✓</span>':''}
+        </div>`;
+      }).join('')}</div>
+      <div class="team-progress-wrap">
+        <div class="team-prog-bar"><div class="team-prog-fill" style="width:${pct}%"></div></div>
+        <div class="team-prog-label">${doneMembers.length} من ${total} أنجزوا ${allDone?'🎉 اكتملت!':''}</div>
+      </div>
+    </div>`;
+  }).filter(Boolean).join('');
+  if(!cont.innerHTML) cont.innerHTML=`<div class="empty-st"><div class="ei">📅</div><p>لا توجد مهام جماعية لهذا اليوم</p></div>`;
+}
+
+function toggleTeamMember(ttid,cid,pts,tname,icon){
+  const today=new Date().getDay();
+  const tk=teamKey(ttid,today,cid);
+  if(state.teamProgress[tk]){
+    delete state.teamProgress[tk];
+    adjustPts(cid,-pts);
+  } else {
+    state.teamProgress[tk]=true;
+    adjustPts(cid,pts);
+    // Check if all done
+    const allDone=state.children.every(c=>state.teamProgress[teamKey(ttid,today,c.id)]);
+    if(allDone){
+      document.getElementById('teamCelMsg').textContent=`${tname} ${icon}`;
+      document.getElementById('teamCelPts').textContent=`+${pts} نقطة لكل واحد! 🌟`;
+      document.getElementById('teamCelOverlay').classList.add('show');
+      launchConfetti();
+    }
+  }
+  saveState();renderTeamTasks();renderLeaderboard();
+}
+
+function addTeamTask(){
+  const name=document.getElementById('teamTaskName').value.trim();
+  if(!name) return;
+  const pts=parseInt(document.getElementById('teamTaskPts').value);
+  const day=document.getElementById('teamTaskDay').value;
+  state.teamTasks.push({id:'tt'+Date.now(),icon:selTeamEmoji,name,points:pts,day});
+  document.getElementById('teamTaskName').value='';
+  saveState();renderTeamTasks();
+}
+
+function deleteTeamTask(id){
+  state.teamTasks=state.teamTasks.filter(t=>t.id!==id);
+  saveState();renderTeamTasks();
+}
+
+// ==================== CHILD VIEW ====================
+function openChildView(cid){
+  if(!cid) return;
+  const c=state.children.find(x=>x.id===cid);if(!c) return;
+  const today=new Date().getDay();
+  document.getElementById('cvAvatar').innerHTML=getAvatarHtml(c);
+  document.getElementById('cvName').textContent=c.name;
+  document.getElementById('cvPts').textContent=`⭐ ${c.points||0} نقطة`;
+
+  const goal=state.goals[cid];
+  const gb=document.getElementById('cvGoalBox');
+  if(goal){
+    gb.innerHTML=`<div class="cv-goal-box"><div class="cv-goal-label">🎯 هدفي هذا الأسبوع</div><div class="cv-goal-text">${goal}</div></div>`;
+  } else gb.innerHTML='';
+
+  const tasks=getAllTasksForDay(today);
+  const penalties=state.defaultPenalties;
+  const teamToday=state.teamTasks.filter(tt=>tt.day==='all'||parseInt(tt.day)===today);
+
+  let html='';
+
+  // Tasks
+  html+=`<div class="cv-section-title"><span>✅</span> مهام اليوم</div>`;
+  if(!tasks.length) html+=`<div style="color:var(--text-muted);font-size:12px;margin-bottom:12px">لا توجد مهام اليوم</div>`;
+  tasks.forEach(t=>{
+    const st=state.progress[progressKey(cid,today,t.id)];
+    html+=`<div class="cv-task-card ${st||''}">
+      <div class="cv-tick ${st==='done'?'done-tick':st==='failed'?'fail-tick':''}">${st==='done'?'✓':st==='failed'?'✗':''}</div>
+      <span style="font-size:20px">${t.icon}</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">${t.name}</div><div style="font-size:11px;color:var(--gold)">+${t.points} نقطة</div></div>
+    </div>`;
+  });
+
+  // Penalties today
+  const todayPens=penalties.filter(p=>state.penalties[penKey(cid,today,p.id)]);
+  if(todayPens.length){
+    html+=`<div class="cv-section-title" style="margin-top:14px"><span>⚠️</span> سلوكيات اليوم</div>`;
+    todayPens.forEach(p=>{
+      html+=`<div class="cv-penalty-card">
+        <span style="font-size:20px">${p.icon}</span>
+        <div><div style="font-size:13px;font-weight:700">${p.name}</div><div style="font-size:11px;color:var(--red)">-${p.points} نقطة</div></div>
+      </div>`;
+    });
+  }
+
+  // Team tasks
+  if(teamToday.length){
+    html+=`<div class="cv-section-title" style="margin-top:14px"><span>🤝</span> مهام الفريق</div>`;
+    teamToday.forEach(tt=>{
+      const done=!!state.teamProgress[teamKey(tt.id,today,cid)];
+      html+=`<div class="cv-team-card">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:20px">${tt.icon}</span>
+          <div style="flex:1"><div style="font-size:13px;font-weight:700">${tt.name}</div><div style="font-size:11px;color:var(--purple)">+${tt.points} نقطة للفريق</div></div>
+          ${done?'<span style="color:var(--green);font-weight:900;font-size:16px">✓</span>':''}
+        </div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('cvBody').innerHTML=html;
+  document.getElementById('childViewOverlay').classList.add('show');
+}
+function closeChildView(){document.getElementById('childViewOverlay').classList.remove('show');}
+
+// ==================== CHILDREN ====================
+function renderChildrenList(){
+  const cont=document.getElementById('childrenList');
+  if(!state.children.length){cont.innerHTML=`<div class="empty-st"><div class="ei">👶</div><p>أضف أطفالك لتبدأ</p></div>`;return;}
+  cont.innerHTML=state.children.map(c=>`
+    <div class="child-card">
+      <div class="child-av-lg">${getAvatarHtml(c)}</div>
+      <div class="child-card-info">
+        <div class="child-card-name">${c.name}</div>
+        ${c.age?`<div class="child-card-age">${c.age} سنوات</div>`:''}
+        <div class="child-card-pts">⭐ ${c.points||0} نقطة</div>
+        ${state.goals[c.id]?`<div class="child-card-goal">🎯 ${state.goals[c.id]}</div>`:''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <button class="icdel" style="background:rgba(59,111,255,0.15);color:var(--blue-light)" onclick="openGoalModal('${c.id}')">🎯</button>
+ 
+        <button class="icdel" onclick="deleteChild('${c.id}')">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+function buildAvatarGrid(){
+  const grid=document.getElementById('avatarGrid');
+  grid.innerHTML=AVATARS.map((svg,i)=>`<div class="av-item ${i===0?'sel':''}" onclick="selectAvatar(${i})">${svg}</div>`).join('');
+}
+function selectAvatar(idx){
+  selAvatarIdx=idx;uploadedPhotoData=null;
+  document.getElementById('uploadPreview').style.display='none';
+  document.querySelectorAll('.av-item').forEach((el,i)=>el.classList.toggle('sel',i===idx));
+}
+function handlePhotoUpload(e){
+  const file=e.target.files[0];if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    uploadedPhotoData=ev.target.result;
+    document.getElementById('uploadedImg').src=uploadedPhotoData;
+    document.getElementById('uploadPreview').style.display='block';
+    document.querySelectorAll('.av-item').forEach(el=>el.classList.remove('sel'));
+    selAvatarIdx=-1;
+  };
+  reader.readAsDataURL(file);
+}
+function addChild(){
+  const name=document.getElementById('childName').value.trim();if(!name) return;
+  const age=document.getElementById('childAge').value;
+  const nc={id:'ch'+Date.now(),name,age:age||null,points:0};
+  if(uploadedPhotoData) nc.photo=uploadedPhotoData;
+  else nc.avatarIdx=selAvatarIdx>=0?selAvatarIdx:0;
+  state.children.push(nc);
+  if(!selectedChild) selectedChild=state.children[0].id;
+  document.getElementById('childName').value='';
+  document.getElementById('childAge').value='';
+  uploadedPhotoData=null;
+  document.getElementById('uploadPreview').style.display='none';
+  document.getElementById('photoUpload').value='';
+  saveState();renderAll();
+}
+function deleteChild(id){
+  if(!confirm('حذف هذا الطفل وكل بياناته؟')) return;
+  state.children=state.children.filter(c=>c.id!==id);
+  Object.keys(state.progress).forEach(k=>{if(k.startsWith(id)) delete state.progress[k];});
+  Object.keys(state.penalties).forEach(k=>{if(k.startsWith(id)) delete state.penalties[k];});
+  delete state.goals[id];
+  if(selectedChild===id) selectedChild=state.children[0]?.id||null;
+  saveState();renderAll();
+}
+
+function renderDefaultTasks(){
+  document.getElementById('defaultTasksList').innerHTML=state.defaultTasks.map(t=>`
+    <div class="task-card">
+      <span class="task-icon">${t.icon}</span>
+      <div class="task-body"><div class="task-name">${t.name}</div><div class="task-pts">+${t.points} نقطة</div>${t.time?`<div class="task-time">⏰ ${t.time}</div>`:''}</div>
+      <button class="icdel" onclick="deleteDefaultTask('${t.id}')">🗑️</button>
+    </div>`).join('');
+}
+function addDefaultTask(){
+  const name=document.getElementById('defTaskName').value.trim();if(!name) return;
+  const time=document.getElementById('defTaskTime').value.trim();
+  const pts=parseInt(document.getElementById('defTaskPts').value);
+  state.defaultTasks.push({id:'def'+Date.now(),icon:selDefEmoji,name,time,points:pts});
+  document.getElementById('defTaskName').value='';
+  document.getElementById('defTaskTime').value='';
+  saveState();renderDefaultTasks();renderTaskList();
+}
+function deleteDefaultTask(id){state.defaultTasks=state.defaultTasks.filter(t=>t.id!==id);saveState();renderDefaultTasks();renderTaskList();}
+
+function renderDefaultPenalties(){
+  document.getElementById('defaultPenaltiesList').innerHTML=state.defaultPenalties.map(p=>`
+    <div class="task-card" style="border-color:rgba(239,68,68,0.2)">
+      <span class="task-icon">${p.icon}</span>
+      <div class="task-body"><div class="task-name">${p.name}</div><div class="task-pts neg">-${p.points} نقطة</div></div>
+      <button class="icdel" onclick="deleteDefaultPenalty('${p.id}')">🗑️</button>
+    </div>`).join('');
+}
+function addDefaultPenalty(){
+  const name=document.getElementById('penName').value.trim();if(!name) return;
+  const pts=parseInt(document.getElementById('penPts').value);
+  state.defaultPenalties.push({id:'dp'+Date.now(),icon:selPenEmoji,name,points:pts});
+  document.getElementById('penName').value='';
+  saveState();renderDefaultPenalties();renderPenaltyList();
+}
+function deleteDefaultPenalty(id){state.defaultPenalties=state.defaultPenalties.filter(p=>p.id!==id);saveState();renderDefaultPenalties();renderPenaltyList();}
+
+function addCustomTask(){
+  const name=document.getElementById('newTaskName').value.trim();if(!name) return;
+  const pts=parseInt(document.getElementById('newTaskPts').value);
+  const day=document.getElementById('newTaskDay').value;
+  state.customTasks.push({id:'ct'+Date.now(),icon:selTaskEmoji,name,points:pts,day});
+  document.getElementById('newTaskName').value='';
+  saveState();renderTaskList();
+}
+
+function adjustPts(cid,delta){
+  const c=state.children.find(x=>x.id===cid);
+  if(c) c.points=Math.max(0,(c.points||0)+delta);
+}
+
+function showCelebration(cid,tname,pts,icon){
+  const c=state.children.find(x=>x.id===cid);if(!c) return;
+  document.getElementById('celAv').innerHTML=getAvatarHtml(c);
+  document.getElementById('celIcon').textContent=icon;
+  document.getElementById('celName').textContent='أحسنت '+c.name+'! 🌟';
+  document.getElementById('celMsg').textContent='أنجزت: '+tname;
+  document.getElementById('celPts').textContent='+'+pts+' نقطة ⭐';
+  document.getElementById('celPts').className='cel-pts';
+  document.getElementById('celOverlay').classList.add('show');
+  launchConfetti();
+}
+
+function launchConfetti(){
+  const cont=document.getElementById('confettiC');cont.innerHTML='';
+  const colors=['#F5C518','#FF6B35','#22C55E','#3B6FFF','#8B5CF6','#EC4899'];
+  for(let i=0;i<65;i++){
+    const el=document.createElement('div');el.className='cp';
+    el.style.left=Math.random()*100+'%';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.width=(Math.random()*9+4)+'px';el.style.height=(Math.random()*9+4)+'px';
+    el.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    el.style.animationDuration=(Math.random()*1.6+1)+'s';
+    el.style.animationDelay=(Math.random()*0.5)+'s';
+    cont.appendChild(el);
+  }
+  setTimeout(()=>cont.innerHTML='',3000);
+}
+
+function buildEmojiPicker(cid,list,cb){
+  const cont=document.getElementById(cid);
+  cont.innerHTML=list.map((e,i)=>`<span class="epick ${i===0?'sel':''}">${e}</span>`).join('');
+  cont.querySelectorAll('.epick').forEach(el=>el.addEventListener('click',function(){
+    cont.querySelectorAll('.epick').forEach(x=>x.classList.remove('sel'));
+    this.classList.add('sel');cb(this.textContent);
+  }));
+}
+
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='leaderboard') renderLeaderboard();
+  if(name==='tasks'){renderChildChips();renderTaskList();renderPenaltyList();}
+  if(name==='team') renderTeamTasks();
+  if(name==='children') renderChildrenList();
+  if(name==='settings'){renderDefaultTasks();renderDefaultPenalties();}
+}
+
+function resetWeek(){
+  if(!state.children.length) return;
+  const winner=[...state.children].sort((a,b)=>(b.points||0)-(a.points||0))[0];
+  document.getElementById('wwAv').innerHTML=getAvatarHtml(winner);
+  document.getElementById('wwName').textContent=winner.name;
+  document.getElementById('wwPts').textContent=winner.points+' نقطة هذا الأسبوع ⭐';
+  document.getElementById('weekWinOverlay').classList.add('show');
+  launchConfetti();
+}
+function confirmResetWeek(){
+  document.getElementById('weekWinOverlay').classList.remove('show');
+  state.children.forEach(c=>c.points=0);
+  state.progress={};state.penalties={};state.teamProgress={};state.goals={};
+  saveState();renderAll();
+}
+function resetAll(){
+  if(!confirm('حذف كل البيانات نهائياً؟')) return;
+  localStorage.removeItem('batal3_state');location.reload();
+}
+
+init();
+</script>
+</body>
+</html>
