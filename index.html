@@ -637,45 +637,6 @@ window.addEventListener('unhandledrejection',function(e){
 const SUPA_URL = 'https://lfxzgikdqvpyvobjvlbo.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmeHpnaWtkcXZweXZvYmp2bGJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzIyOTksImV4cCI6MjA5Njc0ODI5OX0.Xhhs5TOobsXAKRkQbpD0jwI1zfn0yKlh-4hGZ9e72Xg';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
-const SUPA_H = {apikey: SUPA_KEY, Authorization: 'Bearer '+SUPA_KEY, 'Content-Type': 'application/json', Prefer: 'return=representation'};
-
-async function sReq(method, path, body, qs) {
-  const url = SUPA_URL + path + (qs ? '?' + qs : '');
-  const opts = {method, headers: SUPA_H};
-  if(body !== undefined) opts.body = JSON.stringify(body);
-  const r = await fetch(url, opts);
-  let data; try { data = await r.json(); } catch(e) { data = null; }
-  if(!r.ok) return {data:null, error:data||{message:'HTTP '+r.status}};
-  return {data, error:null};
-}
-
-class SBQ {
-  constructor(t) { this._t=t; this._eq=[]; this._ord=null; this._sel='*'; this._sgl=false; }
-  select(c) { this._sel=c||'*'; return this; }
-  eq(c,v) { this._eq.push(c+'=eq.'+encodeURIComponent(v)); return this; }
-  order(c,o) { this._ord='order='+c+((o&&o.ascending===false)?'.desc':'.asc'); return this; }
-  single() { this._sgl=true; return this; }
-  _qs() { let p=['select='+this._sel,...this._eq]; if(this._ord)p.push(this._ord); return p.join('&'); }
-  then(resolve, reject) {
-    sReq('GET','/rest/v1/'+this._t,undefined,this._qs())
-      .then(r=>{
-        if(this._sgl&&r.data) r.data=Array.isArray(r.data)?r.data[0]:r.data;
-        resolve(r);
-      }).catch(reject||console.error);
-  }
-  async insert(row) {
-    const r=await sReq('POST','/rest/v1/'+this._t,row,'select=*');
-    if(r.error) return r;
-    return {data:Array.isArray(r.data)?r.data[0]:r.data, error:null};
-  }
-  async update(row) {
-    const r=await sReq('PATCH','/rest/v1/'+this._t,row,this._qs());
-    if(r.error) return r;
-    return {data:Array.isArray(r.data)?r.data[0]:r.data, error:null};
-  }
-  async delete() { return sReq('DELETE','/rest/v1/'+this._t,undefined,this._eq.join('&')); }
-}
-
 
 
 
@@ -1255,11 +1216,14 @@ async function addChild(){
   const sortOrder=db.children.length;
   let photo_url=null;
   if(uploadedPhotoData){
-    // Store base64 directly as photo_url (for simplicity)
-    photo_url=uploadedPhotoData;
+    // Resize photo to max 120x120 before storing
+    photo_url = await resizePhoto(uploadedPhotoData, 120);
   }
   const newChild={family_id:session.familyId,name,age:age?parseInt(age):null,avatar_idx:selAvatarIdx>=0?selAvatarIdx:0,photo_url,points:0,sort_order:sortOrder};
-  const {data}=await sb.from('children').insert(newChild).select().single();
+  showLoading('جاري إضافة الطفل...');
+  const {data,error}=await sb.from('children').insert(newChild).select().single();
+  hideLoading();
+  if(error){alert('خطأ في الإضافة: '+(error.message||JSON.stringify(error)));return;}
   if(data){
     db.children.push(data);
     if(!selectedChild) selectedChild=data.id;
@@ -1270,6 +1234,22 @@ async function addChild(){
   document.getElementById('uploadPreview').style.display='none';
   document.getElementById('photoUpload').value='';
   renderAll();
+}
+
+function resizePhoto(dataUrl, maxSize){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      let w=img.width, h=img.height;
+      if(w>h){if(w>maxSize){h=Math.round(h*maxSize/w);w=maxSize;}}
+      else{if(h>maxSize){w=Math.round(w*maxSize/h);h=maxSize;}}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      resolve(canvas.toDataURL('image/jpeg',0.7));
+    };
+    img.src=dataUrl;
+  });
 }
 
 async function deleteChild(id){
