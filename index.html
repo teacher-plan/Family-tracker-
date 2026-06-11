@@ -415,6 +415,27 @@ window.addEventListener('unhandledrejection',function(e){
   <div class="cv-body" id="cvBody"></div>
 </div>
 
+<!-- CHILD SETUP OVERLAY -->
+<div id="childSetupOverlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:800;flex-direction:column;align-items:center;justify-content:center;padding:24px;">
+  <div style="font-size:48px;margin-bottom:12px">👨‍👩‍👧</div>
+  <div style="font-size:22px;font-weight:900;margin-bottom:6px;text-align:center">أهلاً بك في عائلتك!</div>
+  <div style="font-size:13px;color:var(--text-muted);margin-bottom:28px;text-align:center">ابدأ بإضافة أطفالك</div>
+  <div style="background:var(--card);border-radius:20px;padding:20px;width:100%;max-width:400px;border:1px solid var(--border);">
+    <input type="file" id="photoUploadSetup" accept="image/*" style="display:none" onchange="handlePhotoUploadSetup(event)">
+    <button class="upload-av-btn" id="uploadPhotoSetupBtn" style="margin-bottom:10px">📷 رفع صورة من المعرض</button>
+    <div id="uploadPreviewSetup" style="display:none;margin-bottom:10px;text-align:center">
+      <img id="uploadedImgSetup" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)">
+      <div style="font-size:11px;color:var(--gold);margin-top:3px">✓ تم رفع الصورة</div>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;text-align:center">— أو اختر أفتار —</div>
+    <div class="av-pick-grid" id="avatarGridSetup"></div>
+    <input class="fi" id="childNameSetup" placeholder="اسم الطفل...">
+    <input class="fi" id="childAgeSetup" placeholder="العمر (اختياري)..." type="number" min="2" max="18">
+    <button class="btn-p" onclick="addChildFromSetup()">إضافة الطفل ➕</button>
+    <button class="btn-ghost" onclick="closeChildSetup()" style="margin-top:8px">تخطي لاحقاً</button>
+  </div>
+</div>
+
 <!-- MAIN APP -->
 <div class="app" id="mainApp" style="display:none">
   <div class="header">
@@ -430,7 +451,7 @@ window.addEventListener('unhandledrejection',function(e){
     <button class="nav-btn active" onclick="showPage('leaderboard',this)"><span class="ni">🏅</span><span>المتصدرون</span></button>
     <button class="nav-btn" onclick="showPage('tasks',this)"><span class="ni">✅</span><span>المهام</span></button>
     <button class="nav-btn" onclick="showPage('team',this)"><span class="ni">🤝</span><span>الفريق</span></button>
-    <button class="nav-btn" onclick="showPage('children',this)"><span class="ni">👧</span><span>الأطفال</span></button>
+
     <button class="nav-btn" onclick="showPage('settings',this)"><span class="ni">⚙️</span><span>الإعدادات</span></button>
   </nav>
 
@@ -492,7 +513,7 @@ window.addEventListener('unhandledrejection',function(e){
     <div class="add-section">
       <div class="add-title">👶 إضافة طفل جديد</div>
       <input type="file" id="photoUpload" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
-      <button class="upload-av-btn" onclick="document.getElementById('photoUpload').click()">📷 رفع صورة من المعرض</button>
+      <button class="upload-av-btn" id="uploadPhotoBtn">📷 رفع صورة من المعرض</button>
       <div id="uploadPreview" style="display:none;margin-bottom:9px;text-align:center">
         <img id="uploadedImg" style="width:65px;height:65px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)">
         <div style="font-size:11px;color:var(--gold);margin-top:3px">✓ تم رفع الصورة</div>
@@ -765,6 +786,58 @@ function logout(){
 function confirmLogout(){if(confirm('تسجيل الخروج؟')) logout();}
 
 // ===== INIT =====
+var selAvatarIdxSetup = 0;
+var uploadedPhotoDataSetup = null;
+
+function selectAvatarSetup(idx){
+  selAvatarIdxSetup = idx;
+  uploadedPhotoDataSetup = null;
+  document.getElementById('uploadPreviewSetup').style.display='none';
+  document.querySelectorAll('#avatarGridSetup .av-item').forEach(function(el,i){ el.classList.toggle('sel', i===idx); });
+}
+
+function handlePhotoUploadSetup(e){
+  var file = e.target.files[0]; if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    uploadedPhotoDataSetup = ev.target.result;
+    document.getElementById('uploadedImgSetup').src = uploadedPhotoDataSetup;
+    document.getElementById('uploadPreviewSetup').style.display = 'block';
+    document.querySelectorAll('#avatarGridSetup .av-item').forEach(function(el){ el.classList.remove('sel'); });
+    selAvatarIdxSetup = -1;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function addChildFromSetup(){
+  var name = document.getElementById('childNameSetup').value.trim();
+  if(!name) return;
+  var age = document.getElementById('childAgeSetup').value;
+  var photo_url = null;
+  if(uploadedPhotoDataSetup){
+    photo_url = await resizePhoto(uploadedPhotoDataSetup, 120);
+  }
+  var newChild = {family_id:session.familyId, name:name, age:age?parseInt(age):null, avatar_idx:selAvatarIdxSetup>=0?selAvatarIdxSetup:0, photo_url:photo_url, points:0, sort_order:0};
+  showLoading('جاري إضافة الطفل...');
+  var result = await sb.from('children').insert(newChild).select().single();
+  hideLoading();
+  if(result.error){ alert('خطأ: '+(result.error.message||JSON.stringify(result.error))); return; }
+  if(result.data){
+    db.children.push(result.data);
+    selectedChild = result.data.id;
+  }
+  document.getElementById('childNameSetup').value = '';
+  document.getElementById('childAgeSetup').value = '';
+  uploadedPhotoDataSetup = null;
+  document.getElementById('uploadPreviewSetup').style.display = 'none';
+  document.getElementById('photoUploadSetup').value = '';
+  selAvatarIdxSetup = 0;
+  document.querySelectorAll('#avatarGridSetup .av-item').forEach(function(el,i){ el.classList.toggle('sel',i===0); });
+  // Ask if want to add more or proceed
+  var addMore = confirm(name + ' تمت الإضافة! هل تريد إضافة طفل آخر؟');
+  if(!addMore){ closeChildSetup(); }
+}
+
 async function init(){
   document.getElementById('headerDate').textContent=new Date().toLocaleDateString('ar-SA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   buildDaySelector();
@@ -773,6 +846,23 @@ async function init(){
   buildEmojiPicker('penEmojiPicker',PEN_EMOJIS,v=>selPenEmoji=v);
   buildEmojiPicker('teamEmojiPicker',TASK_EMOJIS,v=>selTeamEmoji=v);
   buildAvatarGrid();
+
+  // Wire up photo upload buttons via JS (not inline onclick)
+  document.getElementById('uploadPhotoBtn').onclick = function(){ document.getElementById('photoUpload').click(); };
+  document.getElementById('uploadPhotoSetupBtn').onclick = function(){ document.getElementById('photoUploadSetup').click(); };
+
+  // Build setup overlay avatar grid
+  var ag = document.getElementById('avatarGridSetup');
+  if(ag){
+    ag.innerHTML = '';
+    AVATARS.forEach(function(svg, i){
+      var d = document.createElement('div');
+      d.className = 'av-item' + (i===0?' sel':'');
+      d.innerHTML = svg;
+      d.onclick = function(){ selectAvatarSetup(i); };
+      ag.appendChild(d);
+    });
+  }
 
   if(session){
     if(session.role==='child' && session.childId){
@@ -795,7 +885,20 @@ async function startApp(){
   showLoading('جاري تحميل بيانات العائلة...');
   await loadFamilyData();
   hideLoading();
-  if(db.children.length>0) selectedChild=db.children[0].id;
+  if(db.children.length>0){
+    selectedChild=db.children[0].id;
+    renderAll();
+  } else {
+    // First time - show child setup
+    showChildSetup();
+  }
+}
+
+function showChildSetup(){
+  document.getElementById('childSetupOverlay').style.display='flex';
+}
+function closeChildSetup(){
+  document.getElementById('childSetupOverlay').style.display='none';
   renderAll();
 }
 
@@ -1367,7 +1470,7 @@ function showPage(name,btn){
   if(name==='leaderboard') renderLeaderboard();
   if(name==='tasks'){renderChildChips();renderTaskList();renderPenaltyList();}
   if(name==='team') renderTeamTasks();
-  if(name==='children') renderChildrenList();
+  if(name==='children'){ renderChildrenList(); }
   if(name==='settings'){renderDefaultTasks();renderDefaultPenalties();}
 }
 
