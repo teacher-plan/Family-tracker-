@@ -535,66 +535,62 @@ window.addEventListener('unhandledrejection',function(e){
 </div>
 
 <script>
-// Minimal Supabase client - works in all browsers
+// Supabase REST client - Safari compatible
 (function(global) {
   function createClient(url, key) {
-    const baseHeaders = {
+    var H = {
       'apikey': key,
       'Authorization': 'Bearer ' + key,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     };
 
-    function req(method, path, body, extraHeaders) {
-      const h = Object.assign({}, baseHeaders, extraHeaders||{});
-      return fetch(url + path, {
-        method: method,
-        headers: h,
-        body: body ? JSON.stringify(body) : undefined
-      }).then(async r => {
-        const text = await r.text();
-        const d = text ? JSON.parse(text) : null;
-        return { data: r.ok ? d : null, error: r.ok ? null : d };
+    function req(method, path, body) {
+      var opts = { method: method, headers: H };
+      if (body !== undefined) opts.body = JSON.stringify(body);
+      return fetch(url + path, opts).then(function(r) {
+        return r.text().then(function(text) {
+          var d = null;
+          if (text) {
+            try { d = JSON.parse(text); } catch(e) { d = { message: text }; }
+          }
+          if (r.ok) return { data: d, error: null };
+          return { data: null, error: d || { message: 'HTTP ' + r.status } };
+        });
+      }).catch(function(e) {
+        return { data: null, error: { message: e.message || 'Network error' } };
       });
     }
 
     function from(table) {
-      let _table = table;
-      let _params = [];
-      let _method = 'GET';
-      let _body = null;
-      let _single = false;
+      var params = [];
 
-      function buildUrl() {
-        const base = url + '/rest/v1/' + _table;
-        return _params.length ? base + '?' + _params.join('&') : base;
-      }
-
-      const q = {
+      var q = {
         select: function(cols) {
-          _params.push('select=' + (cols||'*'));
+          params.push('select=' + (cols || '*'));
           return q;
         },
         eq: function(col, val) {
-          _params.push(col + '=eq.' + encodeURIComponent(val));
+          params.push(col + '=eq.' + encodeURIComponent(val));
           return q;
         },
         order: function(col, opts) {
-          _params.push('order=' + col + ((opts&&opts.ascending===false)?'.desc':'.asc'));
+          params.push('order=' + col + (opts && opts.ascending === false ? '.desc' : '.asc'));
           return q;
         },
         insert: function(data) {
-          _method = 'POST';
-          _body = data;
-          const insertQ = {
+          var single = false;
+          var insertQ = {
             select: function() { return insertQ; },
-            single: function() { _single = true; return insertQ; },
+            single: function() { single = true; return insertQ; },
             then: function(res, rej) {
-              return req('POST', '/rest/v1/' + _table, data)
-                .then(r => {
-                  if(_single && r.data) r.data = Array.isArray(r.data) ? r.data[0] : r.data;
-                  res(r);
-                }).catch(rej);
+              var path = '/rest/v1/' + table;
+              return req('POST', path, data).then(function(r) {
+                if (single && r.data) {
+                  r.data = Array.isArray(r.data) ? r.data[0] : r.data;
+                }
+                return r;
+              }).then(res, rej);
             }
           };
           return insertQ;
@@ -602,29 +598,31 @@ window.addEventListener('unhandledrejection',function(e){
         update: function(data) {
           return {
             eq: function(col, val) {
-              const path = '/rest/v1/' + _table + '?' + col + '=eq.' + encodeURIComponent(val);
-              return req('PATCH', path, data);
+              var p = params.slice();
+              p.push(col + '=eq.' + encodeURIComponent(val));
+              return req('PATCH', '/rest/v1/' + table + '?' + p.join('&'), data);
             }
           };
         },
         delete: function() {
           return {
             eq: function(col, val) {
-              const path = '/rest/v1/' + _table + '?' + col + '=eq.' + encodeURIComponent(val);
-              return req('DELETE', path);
+              var p = params.slice();
+              p.push(col + '=eq.' + encodeURIComponent(val));
+              return req('DELETE', '/rest/v1/' + table + '?' + p.join('&'));
             }
           };
         },
         then: function(res, rej) {
-          return req('GET', '/rest/v1/' + _table + (_params.length?'?'+_params.join('&'):''))
-            .then(res).catch(rej);
+          var path = '/rest/v1/' + table + (params.length ? '?' + params.join('&') : '');
+          return req('GET', path).then(res, rej);
         }
       };
       return q;
     }
 
-    function rpc(funcName, params) {
-      return req('POST', '/rest/v1/rpc/' + funcName, params||{});
+    function rpc(fn, params) {
+      return req('POST', '/rest/v1/rpc/' + fn, params || {});
     }
 
     return { from: from, rpc: rpc };
@@ -632,7 +630,6 @@ window.addEventListener('unhandledrejection',function(e){
 
   global.supabase = { createClient: createClient };
 })(window);
-
 </script>
 <script>
 
