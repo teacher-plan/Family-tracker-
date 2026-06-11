@@ -533,81 +533,96 @@ window.addEventListener('unhandledrejection',function(e){
 </div>
 
 <script>
-// Minimal Supabase client - no webpack, works in all browsers
+// Minimal Supabase client - works in all browsers
 (function(global) {
   function createClient(url, key) {
-    const headers = {
+    const baseHeaders = {
       'apikey': key,
       'Authorization': 'Bearer ' + key,
       'Content-Type': 'application/json',
       'Prefer': 'return=representation'
     };
 
-    function from(table) {
-      let _url = url + '/rest/v1/' + table;
-      let _filters = [];
-      let _order = null;
+    function req(method, path, body, extraHeaders) {
+      const h = Object.assign({}, baseHeaders, extraHeaders||{});
+      return fetch(url + path, {
+        method: method,
+        headers: h,
+        body: body ? JSON.stringify(body) : undefined
+      }).then(async r => {
+        const text = await r.text();
+        const d = text ? JSON.parse(text) : null;
+        return { data: r.ok ? d : null, error: r.ok ? null : d };
+      });
+    }
 
-      const builder = {
-        select: function(cols) { _url += '?select=' + (cols||'*'); return builder; },
-        eq: function(col, val) { _url += (_url.includes('?')?'&':'?') + col + '=eq.' + val; return builder; },
+    function from(table) {
+      let _table = table;
+      let _params = [];
+      let _method = 'GET';
+      let _body = null;
+      let _single = false;
+
+      function buildUrl() {
+        const base = url + '/rest/v1/' + _table;
+        return _params.length ? base + '?' + _params.join('&') : base;
+      }
+
+      const q = {
+        select: function(cols) {
+          _params.push('select=' + (cols||'*'));
+          return q;
+        },
+        eq: function(col, val) {
+          _params.push(col + '=eq.' + encodeURIComponent(val));
+          return q;
+        },
         order: function(col, opts) {
-          _url += (_url.includes('?')?'&':'?') + 'order=' + col + (opts&&opts.ascending===false?'.desc':'.asc');
-          return builder;
+          _params.push('order=' + col + ((opts&&opts.ascending===false)?'.desc':'.asc'));
+          return q;
         },
         insert: function(data) {
-          return {
-            select: function() { return builder._insert(data); },
-            single: function() { return builder._insertSingle(data); },
-            then: function(res, rej) { return builder._insert(data).then(res,rej); }
+          _method = 'POST';
+          _body = data;
+          const insertQ = {
+            select: function() { return insertQ; },
+            single: function() { _single = true; return insertQ; },
+            then: function(res, rej) {
+              return req('POST', '/rest/v1/' + _table, data)
+                .then(r => {
+                  if(_single && r.data) r.data = Array.isArray(r.data) ? r.data[0] : r.data;
+                  res(r);
+                }).catch(rej);
+            }
           };
-        },
-        _insert: function(data) {
-          return fetch(_url.split('?')[0], {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data)
-          }).then(r => r.json().then(d => ({ data: Array.isArray(d)?d:[d], error: r.ok?null:d })));
-        },
-        _insertSingle: function(data) {
-          const h = Object.assign({}, headers, {'Prefer': 'return=representation'});
-          return fetch(_url.split('?')[0], {
-            method: 'POST', headers: h, body: JSON.stringify(data)
-          }).then(r => r.json().then(d => ({ data: Array.isArray(d)?d[0]:d, error: r.ok?null:d })));
+          return insertQ;
         },
         update: function(data) {
           return {
             eq: function(col, val) {
-              const u = _url.split('?')[0] + '?' + col + '=eq.' + val;
-              return fetch(u, { method: 'PATCH', headers: headers, body: JSON.stringify(data) })
-                .then(r => r.text().then(t => ({ data: t?JSON.parse(t):null, error: r.ok?null:t })));
+              const path = '/rest/v1/' + _table + '?' + col + '=eq.' + encodeURIComponent(val);
+              return req('PATCH', path, data);
             }
           };
         },
         delete: function() {
           return {
             eq: function(col, val) {
-              const u = _url.split('?')[0] + '?' + col + '=eq.' + val;
-              return fetch(u, { method: 'DELETE', headers: headers })
-                .then(r => ({ data: null, error: r.ok?null:'delete failed' }));
+              const path = '/rest/v1/' + _table + '?' + col + '=eq.' + encodeURIComponent(val);
+              return req('DELETE', path);
             }
           };
         },
-        then: function(resolve, reject) {
-          return fetch(_url, { headers: headers })
-            .then(r => r.json().then(d => resolve({ data: r.ok?d:null, error: r.ok?null:d })))
-            .catch(reject);
+        then: function(res, rej) {
+          return req('GET', '/rest/v1/' + _table + (_params.length?'?'+_params.join('&'):''))
+            .then(res).catch(rej);
         }
       };
-      return builder;
+      return q;
     }
 
     function rpc(funcName, params) {
-      return fetch(url + '/rest/v1/rpc/' + funcName, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(params || {})
-      }).then(r => r.json().then(d => ({ data: r.ok ? d : null, error: r.ok ? null : d })));
+      return req('POST', '/rest/v1/rpc/' + funcName, params||{});
     }
 
     return { from: from, rpc: rpc };
