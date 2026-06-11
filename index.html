@@ -471,6 +471,26 @@ window.addEventListener('unhandledrejection',function(e){
       <div class="goal-section-title">🎯 هدف الأسبوع</div>
       <div id="goalDisplay"></div>
     </div>
+    <!-- BONUS POINTS SECTION -->
+    <div id="bonusSection" style="display:none;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0"></div>
+        🎁 منح نقاط فورية
+      </div>
+      <div style="background:var(--card);border-radius:16px;padding:14px;border:1px solid var(--border)">
+        <input class="fi" id="bonusTaskName" placeholder="اسم الإنجاز (مثال: ساعد في الطبخ)..." style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:12px;padding:10px 14px;border:1px solid var(--border);margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--text-muted)">النقاط</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button onclick="changeBonusPts(-5)" style="width:36px;height:36px;border-radius:50%;border:none;background:rgba(239,68,68,0.15);color:var(--red);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
+            <div id="bonusPtsDisplay" style="font-size:24px;font-weight:900;color:var(--gold);min-width:50px;text-align:center">10</div>
+            <button onclick="changeBonusPts(5)" style="width:36px;height:36px;border-radius:50%;border:none;background:rgba(34,197,94,0.15);color:var(--green);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
+          </div>
+        </div>
+        <button class="btn-p" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-weight:900" onclick="grantBonusPoints()">⭐ منح النقاط</button>
+      </div>
+    </div>
+
     <div class="sec-title"><div class="dot"></div>اختر اليوم</div>
     <div class="day-selector" id="daySelector"></div>
     <div class="sec-title"><div class="dot"></div>✅ مهام اليوم</div>
@@ -691,6 +711,7 @@ let db = {
 
 let selectedChild=null, selectedDay=new Date().getDay();
 let selTaskEmoji='⭐', selDefEmoji='⭐', selPenEmoji='😤', selTeamEmoji='🤝';
+let bonusPts = 10;
 let selAvatarIdx=0, uploadedPhotoData=null, goalModalChildId=null;
 let loginRole='adult';
 
@@ -1036,10 +1057,19 @@ function renderChildChips(){
   cont.innerHTML=db.children.map(c=>'<div class="cchip '+(c.id===selectedChild?'sel':'')+'" onclick="selectChild(\''+c.id+'\')"><div class="cchip-av">'+getAvatarHtml(c)+'</div><div class="cchip-name">'+c.name+'</div></div>').join('');
   updateGoalSection();
 }
-function selectChild(id){selectedChild=id;renderChildChips();renderTaskList();renderPenaltyList();}
+function selectChild(id){
+  selectedChild=id;
+  renderChildChips();
+  renderTaskList();
+  renderPenaltyList();
+  var bs=document.getElementById('bonusSection');
+  if(bs) bs.style.display = id ? 'block' : 'none';
+}
 
 // ===== GOAL =====
 function updateGoalSection(){
+  var bs=document.getElementById('bonusSection');
+  if(bs) bs.style.display = selectedChild ? 'block' : 'none';
   const sec=document.getElementById('goalSection');
   if(!selectedChild){sec.style.display='none';return;}
   sec.style.display='block';
@@ -1422,6 +1452,27 @@ async function addCustomTask(){
   if(data) db.customTasks.push(data);
   document.getElementById('newTaskName').value='';
   renderTaskList();
+}
+
+// ===== BONUS POINTS =====
+function changeBonusPts(delta){
+  bonusPts = Math.max(5, Math.min(100, bonusPts + delta));
+  document.getElementById('bonusPtsDisplay').textContent = bonusPts;
+}
+
+async function grantBonusPoints(){
+  if(!selectedChild) return;
+  var name = document.getElementById('bonusTaskName').value.trim();
+  if(!name){ alert('اكتب اسم الإنجاز أولاً'); return; }
+  var c = db.children.find(function(x){ return x.id===selectedChild; });
+  if(!c) return;
+  showLoading('جاري منح النقاط...');
+  await updatePoints(selectedChild, bonusPts);
+  hideLoading();
+  document.getElementById('bonusTaskName').value = '';
+  showCelebration(selectedChild, name, bonusPts, '⭐');
+  renderLeaderboard();
+  renderChildChips();
 }
 
 // ===== UTILS =====
