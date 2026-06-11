@@ -868,7 +868,7 @@ function renderLeaderboard(){
     const pct=Math.max(8,Math.round(((c.points||0)/maxPts)*155));
     const color=BAR_COLORS[db.children.findIndex(x=>x.id===c.id)%BAR_COLORS.length];
     const rc=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-    bc.innerHTML+='<div class="bar-col" onclick="goToChildTasks(\"'+c.id+'\")"><div class="bar-pts">'+(c.points||0)+'</div><div class="bar-avatar-wrap '+rc+'">'+getAvatarHtml(c)+'</div><div class="bar-track"><div class="bar-fill" style="height:'+pct+'px;background:linear-gradient(180deg,'+color+','+color+'88)"></div></div><div class="bar-name">'+c.name+'</div></div>';
+    bc.innerHTML+='<div class="bar-col" onclick="goToChildTasks(\''+c.id+'\')"><div class="bar-pts">'+(c.points||0)+'</div><div class="bar-avatar-wrap '+rc+'">'+getAvatarHtml(c)+'</div><div class="bar-track"><div class="bar-fill" style="height:'+pct+'px;background:linear-gradient(180deg,'+color+','+color+'88)"></div></div><div class="bar-name">'+c.name+'</div></div>';
   });
   document.getElementById('rankList').innerHTML=sorted.map((c,i)=>{
     const medals=['🥇','🥈','🥉'];
@@ -878,7 +878,7 @@ function renderLeaderboard(){
     const todayDone=allTasks.filter(t=>db.progress[pKey(c.id,t.id,todayDate)]==='done').length;
     const streak=getStreak(c.id);
     const goal=c.goal||'';
-    return '<div class="rank-row '+rc+'" onclick="goToChildTasks(\"'+c.id+'\")">'
+    return '<div class="rank-row '+rc+'" onclick="goToChildTasks(\''+c.id+'\')">'
       +'<div class="rank-medal">'+(medals[i]||i+1)+'</div>'
       +'<div class="rank-av">'+getAvatarHtml(c)+'</div>'
       +'<div class="rank-info"><div class="rank-name">'+c.name+'</div>'
@@ -930,7 +930,7 @@ function selectDay(idx,el){
 function renderChildChips(){
   const cont=document.getElementById('childChips');
   if(!db.children.length){cont.innerHTML='<div style="color:var(--text-muted);font-size:12px;padding:8px">أضف أطفالك أولاً</div>';return;}
-  cont.innerHTML=db.children.map(c=>'<div class="cchip '+(c.id===selectedChild?'sel':'')+'" onclick="selectChild(\"'+c.id+'\")"><div class="cchip-av">'+getAvatarHtml(c)+'</div><div class="cchip-name">'+c.name+'</div></div>').join('');
+  cont.innerHTML=db.children.map(c=>'<div class="cchip '+(c.id===selectedChild?'sel':'')+'" onclick="selectChild(\''+c.id+'\')"><div class="cchip-av">'+getAvatarHtml(c)+'</div><div class="cchip-name">'+c.name+'</div></div>').join('');
   updateGoalSection();
 }
 function selectChild(id){selectedChild=id;renderChildChips();renderTaskList();renderPenaltyList();}
@@ -943,8 +943,8 @@ function updateGoalSection(){
   const child=db.children.find(c=>c.id===selectedChild);
   const goal=child&&child.goal||'';
   document.getElementById('goalDisplay').innerHTML=goal
-    ?'<div class="goal-display"><span>🎯 '+goal+'</span><button onclick="openGoalModal(\"'+selectedChild+'\")" style="background:none;border:none;color:var(--blue-light);font-size:12px;cursor:pointer;font-family:Tajawal,sans-serif;font-weight:700">تغيير</button></div>'
-    :'<div class="goal-empty" onclick="openGoalModal(\"'+selectedChild+'\")">+ اضغط لتحديد هدف هذا الأسبوع</div>';
+    ?'<div class="goal-display"><span>🎯 '+goal+'</span><button onclick="openGoalModal(\''+selectedChild+'\')" style="background:none;border:none;color:var(--blue-light);font-size:12px;cursor:pointer;font-family:Tajawal,sans-serif;font-weight:700">تغيير</button></div>'
+    :'<div class="goal-empty" onclick="openGoalModal(\''+selectedChild+'\')">+ اضغط لتحديد هدف هذا الأسبوع</div>';
 }
 function openGoalModal(cid){
   goalModalChildId=cid;
