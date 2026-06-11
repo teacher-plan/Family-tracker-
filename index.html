@@ -707,7 +707,7 @@ async function registerFamily(){
   showLoading('جاري إنشاء العائلة...');
   const {data,error}=await sb.rpc('register_family',{p_name:name,p_password:pass});
   hideLoading();
-  if(error||data?.error){err.textContent=data?.error||'حدث خطأ، حاول مجدداً';return;}
+  if(error||data&&data.error){err.textContent=data&&data.error||'حدث خطأ، حاول مجدداً';return;}
   session={familyId:data.id, familyName:data.name, role:'adult'};
   localStorage.setItem('batal_session',JSON.stringify(session));
   startApp();
@@ -722,7 +722,7 @@ async function loginFamily(){
   showLoading('جاري التحقق...');
   const {data,error}=await sb.rpc('login_family',{p_name:name,p_password:pass});
   hideLoading();
-  if(error||data?.error){err.textContent=data?.error||'حدث خطأ';return;}
+  if(error||data&&data.error){err.textContent=data&&data.error||'حدث خطأ';return;}
   session={familyId:data.id, familyName:data.name, role:loginRole};
   localStorage.setItem('batal_session',JSON.stringify(session));
   if(loginRole==='child'){
@@ -940,7 +940,7 @@ function updateGoalSection(){
   if(!selectedChild){sec.style.display='none';return;}
   sec.style.display='block';
   const child=db.children.find(c=>c.id===selectedChild);
-  const goal=child?.goal||'';
+  const goal=child&&child.goal||'';
   document.getElementById('goalDisplay').innerHTML=goal
     ?'<div class="goal-display"><span>🎯 '+goal+'</span><button onclick="openGoalModal(\"'+selectedChild+'\")" style="background:none;border:none;color:var(--blue-light);font-size:12px;cursor:pointer;font-family:Tajawal,sans-serif;font-weight:700">تغيير</button></div>'
     :'<div class="goal-empty" onclick="openGoalModal(\"'+selectedChild+'\")">+ اضغط لتحديد هدف هذا الأسبوع</div>';
@@ -949,7 +949,7 @@ function openGoalModal(cid){
   goalModalChildId=cid;
   const c=db.children.find(x=>x.id===cid);
   document.getElementById('goalModalChildName').textContent=c?'هدف '+c.name+' لهذا الأسبوع':'';
-  document.getElementById('goalInput').value=c?.goal||'';
+  document.getElementById('goalInput').value=c&&c.goal||'';
   document.getElementById('goalModal').classList.add('show');
 }
 async function saveGoal(){
@@ -1256,7 +1256,7 @@ async function deleteChild(id){
   if(!confirm('حذف هذا الطفل وكل بياناته؟')) return;
   await sb.from('children').delete().eq('id',id);
   db.children=db.children.filter(c=>c.id!==id);
-  if(selectedChild===id) selectedChild=db.children[0]?.id||null;
+  if(selectedChild===id) selectedChild=db.children[0]&&db.children[0].id||null;
   renderAll();
 }
 
