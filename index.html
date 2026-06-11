@@ -482,12 +482,15 @@ window.addEventListener('unhandledrejection',function(e){
         <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg);border-radius:12px;padding:10px 14px;border:1px solid var(--border);margin-bottom:12px">
           <div style="font-size:13px;font-weight:700;color:var(--text-muted)">النقاط</div>
           <div style="display:flex;align-items:center;gap:12px">
-            <button onclick="changeBonusPts(-5)" style="width:36px;height:36px;border-radius:50%;border:none;background:rgba(239,68,68,0.15);color:var(--red);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
-            <div id="bonusPtsDisplay" style="font-size:24px;font-weight:900;color:var(--gold);min-width:50px;text-align:center">10</div>
-            <button onclick="changeBonusPts(5)" style="width:36px;height:36px;border-radius:50%;border:none;background:rgba(34,197,94,0.15);color:var(--green);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
+            <button onclick="changeBonusPts(-1)" style="width:36px;height:36px;border-radius:50%;border:none;background:rgba(239,68,68,0.15);color:var(--red);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center">−</button>
+            <div id="bonusPtsDisplay" style="font-size:24px;font-weight:900;color:var(--gold);min-width:50px;text-align:center">5</div>
+            <button onclick="changeBonusPts(1)" style="width:36px;height:36px;border-radius:50%;border:none;background:rgba(34,197,94,0.15);color:var(--green);font-size:20px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>
           </div>
         </div>
-        <button class="btn-p" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-weight:900" onclick="grantBonusPoints()">⭐ منح النقاط</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn-p" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:#000;font-weight:900;flex:1" onclick="grantBonusPoints()">⭐ منح</button>
+          <button class="btn-p" style="background:linear-gradient(135deg,#b91c1c,var(--red));flex:1" onclick="deductPoints()">⚡ خصم</button>
+        </div>
       </div>
     </div>
 
@@ -504,7 +507,7 @@ window.addEventListener('unhandledrejection',function(e){
       <div class="emoji-row" id="emojiPicker"></div>
       <input class="fi" id="newTaskName" placeholder="اسم المهمة...">
       <div class="row2">
-        <select class="sel-fi" id="newTaskPts"><option value="5">5 نقاط</option><option value="10" selected>10 نقاط</option><option value="15">15 نقاط</option><option value="20">20 نقاط</option><option value="25">25 نقاط</option></select>
+        <select class="sel-fi" id="newTaskPts"><option value="1">1 نقطة</option><option value="2">2 نقطة</option><option value="3">3 نقطة</option><option value="4">4 نقطة</option><option value="5">5 نقطة</option><option value="6">6 نقطة</option><option value="7">7 نقطة</option><option value="8">8 نقطة</option><option value="9">9 نقطة</option><option value="10" selected>10 نقطة</option><option value="11">11 نقطة</option><option value="12">12 نقطة</option><option value="13">13 نقطة</option><option value="14">14 نقطة</option><option value="15">15 نقطة</option><option value="16">16 نقطة</option><option value="17">17 نقطة</option><option value="18">18 نقطة</option><option value="19">19 نقطة</option><option value="20">20 نقطة</option><option value="21">21 نقطة</option><option value="22">22 نقطة</option><option value="23">23 نقطة</option><option value="24">24 نقطة</option><option value="25">25 نقطة</option><option value="26">26 نقطة</option><option value="27">27 نقطة</option><option value="28">28 نقطة</option><option value="29">29 نقطة</option><option value="30">30 نقطة</option></select>
         <select class="sel-fi" id="newTaskDay"><option value="all">كل يوم</option><option value="0">الأحد</option><option value="1">الإثنين</option><option value="2">الثلاثاء</option><option value="3">الأربعاء</option><option value="4">الخميس</option><option value="5">الجمعة</option><option value="6">السبت</option></select>
       </div>
       <button class="btn-p" onclick="addCustomTask()">إضافة المهمة</button>
@@ -520,7 +523,7 @@ window.addEventListener('unhandledrejection',function(e){
       <div class="emoji-row" id="teamEmojiPicker"></div>
       <input class="fi" id="teamTaskName" placeholder="اسم المهمة الجماعية...">
       <div class="row2">
-        <select class="sel-fi" id="teamTaskPts"><option value="10">10 لكل</option><option value="15" selected>15 لكل</option><option value="20">20 لكل</option><option value="25">25 لكل</option><option value="30">30 لكل</option></select>
+        <select class="sel-fi" id="teamTaskPts"><option value="1">1 لكل</option><option value="2">2 لكل</option><option value="3">3 لكل</option><option value="4">4 لكل</option><option value="5">5 لكل</option><option value="6">6 لكل</option><option value="7">7 لكل</option><option value="8">8 لكل</option><option value="9">9 لكل</option><option value="10">10 لكل</option><option value="11">11 لكل</option><option value="12">12 لكل</option><option value="13">13 لكل</option><option value="14">14 لكل</option><option value="15" selected>15 لكل</option><option value="16">16 لكل</option><option value="17">17 لكل</option><option value="18">18 لكل</option><option value="19">19 لكل</option><option value="20">20 لكل</option><option value="21">21 لكل</option><option value="22">22 لكل</option><option value="23">23 لكل</option><option value="24">24 لكل</option><option value="25">25 لكل</option><option value="26">26 لكل</option><option value="27">27 لكل</option><option value="28">28 لكل</option><option value="29">29 لكل</option><option value="30">30 لكل</option></select>
         <select class="sel-fi" id="teamTaskDay"><option value="all">كل يوم</option><option value="0">الأحد</option><option value="1">الإثنين</option><option value="2">الثلاثاء</option><option value="3">الأربعاء</option><option value="4">الخميس</option><option value="5">الجمعة</option><option value="6">السبت</option></select>
       </div>
       <button class="btn-p btn-purple" onclick="addTeamTask()">إضافة للفريق</button>
@@ -555,7 +558,7 @@ window.addEventListener('unhandledrejection',function(e){
       <input class="fi" id="defTaskName" placeholder="اسم المهمة...">
       <div class="row2">
         <input class="fi" id="defTaskTime" placeholder="الوقت..." style="margin-bottom:0">
-        <select class="sel-fi" id="defTaskPts"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select>
+        <select class="sel-fi" id="defTaskPts"><option value="1">1 نقطة</option><option value="2">2 نقطة</option><option value="3">3 نقطة</option><option value="4">4 نقطة</option><option value="5">5 نقطة</option><option value="6">6 نقطة</option><option value="7">7 نقطة</option><option value="8">8 نقطة</option><option value="9">9 نقطة</option><option value="10" selected>10 نقطة</option><option value="11">11 نقطة</option><option value="12">12 نقطة</option><option value="13">13 نقطة</option><option value="14">14 نقطة</option><option value="15">15 نقطة</option><option value="16">16 نقطة</option><option value="17">17 نقطة</option><option value="18">18 نقطة</option><option value="19">19 نقطة</option><option value="20">20 نقطة</option><option value="21">21 نقطة</option><option value="22">22 نقطة</option><option value="23">23 نقطة</option><option value="24">24 نقطة</option><option value="25">25 نقطة</option><option value="26">26 نقطة</option><option value="27">27 نقطة</option><option value="28">28 نقطة</option><option value="29">29 نقطة</option><option value="30">30 نقطة</option></select>
       </div>
       <button class="btn-p" onclick="addDefaultTask()" style="margin-top:8px">إضافة</button>
     </div>
@@ -566,7 +569,7 @@ window.addEventListener('unhandledrejection',function(e){
       <div class="add-title" style="color:var(--red)">➕ إضافة سلوك سلبي</div>
       <div class="emoji-row" id="penEmojiPicker"></div>
       <input class="fi" id="penName" placeholder="اسم السلوك السلبي...">
-      <select class="sel-fi" id="penPts" style="width:100%;margin-bottom:8px"><option value="5">-5</option><option value="10" selected>-10</option><option value="15">-15</option><option value="20">-20</option></select>
+      <select class="sel-fi" id="penPts" style="width:100%;margin-bottom:8px"><option value="1">1 نقطة</option><option value="2">2 نقطة</option><option value="3">3 نقطة</option><option value="4">4 نقطة</option><option value="5">5 نقطة</option><option value="6">6 نقطة</option><option value="7">7 نقطة</option><option value="8">8 نقطة</option><option value="9">9 نقطة</option><option value="10" selected>10 نقطة</option><option value="11">11 نقطة</option><option value="12">12 نقطة</option><option value="13">13 نقطة</option><option value="14">14 نقطة</option><option value="15">15 نقطة</option><option value="16">16 نقطة</option><option value="17">17 نقطة</option><option value="18">18 نقطة</option><option value="19">19 نقطة</option><option value="20">20 نقطة</option><option value="21">21 نقطة</option><option value="22">22 نقطة</option><option value="23">23 نقطة</option><option value="24">24 نقطة</option><option value="25">25 نقطة</option><option value="26">26 نقطة</option><option value="27">27 نقطة</option><option value="28">28 نقطة</option><option value="29">29 نقطة</option><option value="30">30 نقطة</option></select>
       <button class="btn-p btn-red" onclick="addDefaultPenalty()">إضافة</button>
     </div>
     <div class="divider"></div>
@@ -711,7 +714,7 @@ let db = {
 
 let selectedChild=null, selectedDay=new Date().getDay();
 let selTaskEmoji='⭐', selDefEmoji='⭐', selPenEmoji='😤', selTeamEmoji='🤝';
-let bonusPts = 10;
+let bonusPts = 5;
 let selAvatarIdx=0, uploadedPhotoData=null, goalModalChildId=null;
 let loginRole='adult';
 
@@ -1128,30 +1131,45 @@ async function setProgress(tid,status,tname,pts,icon,type){
   const existingId=db.progress[k+'__id'];
 
   if(prev===status){
-    // Undo
-    if(existingId) await sb.from('progress').delete().eq('id',existingId);
+    // Undo - update UI immediately
     delete db.progress[k]; delete db.progress[k+'__id'];
-    if(status==='done') await updatePoints(selectedChild,-pts);
+    if(status==='done') adjustPtsLocal(selectedChild,-pts);
+    renderTaskList(); renderLeaderboard();
+    // Save in background
+    if(existingId) sb.from('progress').delete().eq('id',existingId);
+    if(status==='done') sb.from('children').update({points:db.children.find(function(x){return x.id===selectedChild;}).points}).eq('id',selectedChild);
   } else {
-    if(prev==='done') await updatePoints(selectedChild,-pts);
-    if(existingId){
-      await sb.from('progress').update({status}).eq('id',existingId);
-    } else {
-      const {data}=await sb.from('progress').insert({family_id:session.familyId,child_id:selectedChild,task_id:tid,task_type:type,status,date:dateS}).select().single();
-      if(data) db.progress[k+'__id']=data.id;
-    }
+    // Update UI immediately
+    if(prev==='done') adjustPtsLocal(selectedChild,-pts);
     db.progress[k]=status;
-    if(status==='done'){await updatePoints(selectedChild,pts);showCelebration(selectedChild,tname,pts,icon);}
+    if(status==='done'){
+      adjustPtsLocal(selectedChild,pts);
+      showCelebration(selectedChild,tname,pts,icon);
+    }
+    renderTaskList(); renderLeaderboard();
+    // Save in background
+    if(existingId){
+      sb.from('progress').update({status}).eq('id',existingId);
+    } else {
+      sb.from('progress').insert({family_id:session.familyId,child_id:selectedChild,task_id:tid,task_type:type,status,date:dateS}).select().single().then(function(r){
+        if(r.data) db.progress[k+'__id']=r.data.id;
+      });
+    }
+    var child=db.children.find(function(x){return x.id===selectedChild;});
+    if(child) sb.from('children').update({points:child.points}).eq('id',selectedChild);
   }
-  renderTaskList();renderLeaderboard();
+}
+
+function adjustPtsLocal(childId, delta){
+  var c=db.children.find(function(x){return x.id===childId;});
+  if(!c) return;
+  c.points=Math.max(0,(c.points||0)+delta);
 }
 
 async function updatePoints(childId, delta){
-  const c=db.children.find(x=>x.id===childId);
-  if(!c) return;
-  const newPts=Math.max(0,(c.points||0)+delta);
-  c.points=newPts;
-  await sb.from('children').update({points:newPts}).eq('id',childId);
+  adjustPtsLocal(childId, delta);
+  var c=db.children.find(function(x){return x.id===childId;});
+  if(c) await sb.from('children').update({points:c.points}).eq('id',childId);
 }
 
 // ===== PENALTIES =====
@@ -1178,17 +1196,23 @@ async function togglePenalty(pid,pname,pts,icon){
   const k=selectedChild+'__'+pid+'__'+dateS;
   const existingId=db.penaltyLogs[k+'__id'];
   if(db.penaltyLogs[k]){
-    if(existingId) await sb.from('penalty_logs').delete().eq('id',existingId);
     delete db.penaltyLogs[k]; delete db.penaltyLogs[k+'__id'];
-    await updatePoints(selectedChild,pts);
+    adjustPtsLocal(selectedChild,pts);
+    renderPenaltyList(); renderLeaderboard();
+    if(existingId) sb.from('penalty_logs').delete().eq('id',existingId);
+    var child=db.children.find(function(x){return x.id===selectedChild;});
+    if(child) sb.from('children').update({points:child.points}).eq('id',selectedChild);
   } else {
-    const {data}=await sb.from('penalty_logs').insert({family_id:session.familyId,child_id:selectedChild,penalty_id:pid,date:dateS}).select().single();
-    if(data) db.penaltyLogs[k+'__id']=data.id;
     db.penaltyLogs[k]=true;
-    await updatePoints(selectedChild,-pts);
+    adjustPtsLocal(selectedChild,-pts);
     showPenalty(selectedChild,pname,pts,icon);
+    renderPenaltyList(); renderLeaderboard();
+    sb.from('penalty_logs').insert({family_id:session.familyId,child_id:selectedChild,penalty_id:pid,date:dateS}).select().single().then(function(r){
+      if(r.data) db.penaltyLogs[k+'__id']=r.data.id;
+    });
+    var child=db.children.find(function(x){return x.id===selectedChild;});
+    if(child) sb.from('children').update({points:child.points}).eq('id',selectedChild);
   }
-  renderPenaltyList();renderLeaderboard();
 }
 
 function showPenalty(cid,pname,pts,icon){
@@ -1456,8 +1480,27 @@ async function addCustomTask(){
 
 // ===== BONUS POINTS =====
 function changeBonusPts(delta){
-  bonusPts = Math.max(5, Math.min(100, bonusPts + delta));
+  bonusPts = Math.max(1, Math.min(30, bonusPts + delta));
   document.getElementById('bonusPtsDisplay').textContent = bonusPts;
+}
+
+async function deductPoints(){
+  if(!selectedChild) return;
+  var name = document.getElementById('bonusTaskName').value.trim();
+  if(!name){ alert('اكتب سبب الخصم أولاً'); return; }
+  var c = db.children.find(function(x){ return x.id===selectedChild; });
+  if(!c) return;
+  if((c.points||0) < bonusPts){ alert('النقاط الحالية أقل من المقدار المطلوب خصمه'); return; }
+  adjustPtsLocal(selectedChild, -bonusPts);
+  document.getElementById('bonusTaskName').value = '';
+  // Show penalty alert
+  document.getElementById('penAv').innerHTML = getAvatarHtml(c);
+  document.getElementById('penName').textContent = c.name;
+  document.getElementById('penMsg').textContent = name;
+  document.getElementById('penPts').textContent = '-' + bonusPts + ' نقطة';
+  document.getElementById('penOverlay').classList.add('show');
+  renderLeaderboard(); renderChildChips();
+  sb.from('children').update({points:db.children.find(function(x){return x.id===selectedChild;}).points}).eq('id',selectedChild);
 }
 
 async function grantBonusPoints(){
@@ -1466,13 +1509,14 @@ async function grantBonusPoints(){
   if(!name){ alert('اكتب اسم الإنجاز أولاً'); return; }
   var c = db.children.find(function(x){ return x.id===selectedChild; });
   if(!c) return;
-  showLoading('جاري منح النقاط...');
-  await updatePoints(selectedChild, bonusPts);
-  hideLoading();
+  adjustPtsLocal(selectedChild, bonusPts);
   document.getElementById('bonusTaskName').value = '';
   showCelebration(selectedChild, name, bonusPts, '⭐');
   renderLeaderboard();
   renderChildChips();
+  // Save in background
+  var c=db.children.find(function(x){return x.id===selectedChild;});
+  if(c) sb.from('children').update({points:c.points}).eq('id',selectedChild);
 }
 
 // ===== UTILS =====
