@@ -970,7 +970,8 @@ body::before{
 }
 .cv-tick.done-tick{background:var(--green);border-color:var(--green);box-shadow:0 0 10px var(--green-glow);}
 .cv-tick.fail-tick{background:var(--red);border-color:var(--red);}
-.cv-tick svg{width:14px;height:14px;}
+.cv-tick svg{width:14px;height:14px;stroke:#fff;fill:none;}
+.cv-tick svg[fill="currentColor"]{fill:#fff;stroke:none;}
 .cv-close{
   position:absolute;top:16px;left:16px;
   background:rgba(255,255,255,0.08);border:none;
@@ -1817,7 +1818,7 @@ async function loadFamilyData(){
   const fid=session.familyId;
   const today=new Date().toISOString().split('T')[0];
 
-  const [ch,dt,ct,dp,tt,pr,pl,tp]=await Promise.all([
+  const [ch,dt,ct,dp,tt,pr,pl,tp,bl]=await Promise.all([
     sb.from('children').select('*').eq('family_id',fid).order('sort_order'),
     sb.from('default_tasks').select('*').eq('family_id',fid).order('sort_order'),
     sb.from('custom_tasks').select('*').eq('family_id',fid),
@@ -1826,6 +1827,7 @@ async function loadFamilyData(){
     sb.from('progress').select('*').eq('family_id',fid),
     sb.from('penalty_logs').select('*').eq('family_id',fid),
     sb.from('team_progress').select('*').eq('family_id',fid),
+    sb.from('bonus_logs').select('*').eq('family_id',fid),
   ]);
 
   db.children=ch.data||[];
@@ -1843,6 +1845,8 @@ async function loadFamilyData(){
 
   db.teamProgress={};
   (tp.data||[]).forEach(r=>{db.teamProgress[r.child_id+'__'+r.team_task_id+'__'+r.date]=true; db.teamProgress[r.child_id+'__'+r.team_task_id+'__'+r.date+'__id']=r.id;});
+
+  db.bonusLogs=bl.data||[];
 }
 
 function todayStr(){return new Date().toISOString().split('T')[0];}
@@ -2213,6 +2217,18 @@ function openChildViewById(cid){
       html+='<div class="cv-team-card"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">'+tt.icon+'</span><div style="flex:1"><div style="font-size:13px;font-weight:700">'+tt.name+'</div><div style="font-size:11px;color:var(--purple)">+'+tt.points+' نقطة للفريق</div></div>'+(done?'<span style="color:var(--green);font-weight:900;font-size:16px">✓</span>':'')+'</div></div>';
     });
   }
+  const todayLogs=(db.bonusLogs||[]).filter(l=>l.child_id===cid&&l.date===todayDate);
+  if(todayLogs.length){
+    html+='<div class="cv-section-title" style="margin-top:14px">سجل اليوم</div>';
+    todayLogs.forEach(l=>{
+      const isGrant=l.type==='grant';
+      const iconSvg=isGrant?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>':'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+      html+='<div class="cv-task-card" style="border-color:'+(isGrant?'rgba(176,124,16,0.3)':'rgba(220,38,38,0.25)')+';background:'+(isGrant?'rgba(255,209,102,0.06)':'rgba(220,38,38,0.04)')+'">'
+        +'<div class="cv-tick" style="background:'+(isGrant?'var(--gold)':'var(--red)')+';border-color:'+(isGrant?'var(--gold)':'var(--red)')+'">'+iconSvg+'</div>'
+        +'<div style="flex:1"><div style="font-size:13px;font-weight:700">'+l.reason+'</div><div style="font-size:11px;font-weight:800;color:'+(isGrant?'var(--gold)':'var(--red)')+'">'+(isGrant?'+':'-')+l.points+' نقطة</div></div>'
+        +'</div>';
+    });
+  }
   document.getElementById('cvBody').innerHTML=html;
   document.getElementById('childViewOverlay').classList.add('show');
 }
@@ -2391,7 +2407,12 @@ async function deductPoints(){
   document.getElementById('penPts').textContent = '-' + deductPts + ' نقطة';
   document.getElementById('penOverlay').classList.add('show');
   renderLeaderboard(); renderChildChips();
-  sb.from('children').update({points:db.children.find(function(x){return x.id===selectedChild;}).points}).eq('id',selectedChild);
+  var logEntry = {family_id:session.familyId, child_id:selectedChild, reason:name, points:deductPts, type:'deduct', date:todayStr()};
+  db.bonusLogs.push(logEntry);
+  sb.from('children').update({points:c.points}).eq('id',selectedChild);
+  sb.from('bonus_logs').insert(logEntry).select().single().then(function(r){
+    if(r.data){ var idx=db.bonusLogs.indexOf(logEntry); if(idx>-1) db.bonusLogs[idx]=r.data; }
+  });
 }
 
 async function grantBonusPoints(){
@@ -2405,9 +2426,13 @@ async function grantBonusPoints(){
   showCelebration(selectedChild, name, bonusPts, '⭐');
   renderLeaderboard();
   renderChildChips();
+  var logEntry = {family_id:session.familyId, child_id:selectedChild, reason:name, points:bonusPts, type:'grant', date:todayStr()};
+  db.bonusLogs.push(logEntry);
   // Save in background
-  var c=db.children.find(function(x){return x.id===selectedChild;});
-  if(c) sb.from('children').update({points:c.points}).eq('id',selectedChild);
+  sb.from('children').update({points:c.points}).eq('id',selectedChild);
+  sb.from('bonus_logs').insert(logEntry).select().single().then(function(r){
+    if(r.data){ var idx=db.bonusLogs.indexOf(logEntry); if(idx>-1) db.bonusLogs[idx]=r.data; }
+  });
 }
 
 // ===== UTILS =====
