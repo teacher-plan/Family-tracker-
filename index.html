@@ -276,7 +276,7 @@ body::before{
 .rank-list{display:flex;flex-direction:column;gap:8px;}
 .rank-row{
   background:#FFFFFF;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:var(--r-md);
   padding:12px 14px;
   display:flex;align-items:center;gap:10px;
@@ -342,7 +342,7 @@ body::before{
 .stat-card{
   flex:1;
   background:#FFFFFF;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:var(--r-md);
   padding:12px 8px;text-align:center;
 }
@@ -367,7 +367,7 @@ body::before{
   flex-shrink:0;padding:7px 14px;
   border-radius:20px;
   background:#FFFFFF;
-  border:1px solid var(--card-border);
+  border:1.5px solid #E0E3EA;
   color:var(--text-3);
   font-family:'Tajawal',sans-serif;
   font-size:12px;font-weight:700;
@@ -390,7 +390,7 @@ body::before{
   flex-shrink:0;display:flex;flex-direction:column;
   align-items:center;gap:5px;cursor:pointer;
   padding:8px 10px;border-radius:var(--r-sm);
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   background:#FFFFFF;transition:all 0.2s;
 }
 .cchip.sel{
@@ -412,7 +412,7 @@ body::before{
 .task-list{display:flex;flex-direction:column;gap:8px;}
 .task-card{
   background:#FFFFFF;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:var(--r-md);
   padding:13px 14px;
   display:flex;align-items:center;gap:11px;
@@ -526,7 +526,7 @@ body::before{
 /* ── TEAM CARDS ── */
 .team-task-card{
   background:#FFFFFF;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:var(--r-md);padding:13px;margin-bottom:8px;
   position:relative;overflow:hidden;
 }
@@ -549,7 +549,7 @@ body::before{
 .team-member-chip{
   display:flex;align-items:center;gap:6px;
   background:#F9FAFB;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:10px;padding:5px 10px;
   cursor:pointer;transition:all 0.2s;
 }
@@ -666,7 +666,7 @@ body::before{
 .children-list{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
 .child-card{
   background:#FFFFFF;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:var(--r-md);
   padding:13px;display:flex;align-items:center;gap:12px;
   transition:all 0.2s;
@@ -905,7 +905,7 @@ body::before{
 .cp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:380px;}
 .cp-card{
   background:#FFFFFF;border-radius:var(--r-md);
-  padding:18px 12px;border:1px solid #E5E7EB;
+  padding:18px 12px;border:1.5px solid #E0E3EA;
   box-shadow:0 2px 8px rgba(0,0,0,0.05);
   cursor:pointer;text-align:center;transition:all 0.2s;
 }
@@ -958,7 +958,7 @@ body::before{
 .cv-section-title{font-size:12px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;}
 .cv-task-card{
   background:#FFFFFF;border-radius:var(--r-md);
-  padding:12px 14px;border:1px solid #E5E7EB;
+  padding:12px 14px;border:1.5px solid #E0E3EA;
   display:flex;align-items:center;gap:10px;margin-bottom:8px;
 }
 .cv-task-card.done{border-color:rgba(6,214,160,0.3);background:rgba(6,214,160,0.05);}
@@ -1039,7 +1039,7 @@ body::before{
   display:flex;align-items:center;
   justify-content:space-between;
   background:#F9FAFB;
-  border:1px solid #E5E7EB;
+  border:1.5px solid #E0E3EA;
   border-radius:12px;padding:10px 14px;margin-bottom:12px;
 }
 .bonus-label{font-size:12px;font-weight:700;color:var(--text-3);}
@@ -1048,6 +1048,7 @@ body::before{
   min-width:50px;text-align:center;
   font-family:'Sora',sans-serif;
 }
+.bonus-value.neg{color:var(--red);}
 .counter-btn{
   width:38px;height:38px;border-radius:50%;border:none;
   display:flex;align-items:center;justify-content:center;
@@ -1260,24 +1261,37 @@ window.addEventListener('unhandledrejection',function(e){
       <div id="goalDisplay"></div>
     </div>
     <!-- BONUS POINTS SECTION -->
-    <div id="bonusSection" style="display:none;margin-bottom:14px">
-      <div style="font-size:15px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px">
-        <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0"></div>
-        🎁 منح نقاط فورية
-      </div>
-      <div style="background:var(--card);border-radius:16px;padding:14px;border:1px solid var(--border)">
-        <input class="fi" id="bonusTaskName" placeholder="اسم الإنجاز (مثال: ساعد في الطبخ)..." style="margin-bottom:12px">
-        <div class="bonus-counter">
-          <div class="bonus-label">النقاط</div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <button onclick="changeBonusPts(-1)" class="counter-btn minus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-            <div id="bonusPtsDisplay" class="bonus-value">5</div>
-            <button onclick="changeBonusPts(1)" class="counter-btn plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    <div id="bonusSection" style="display:none;margin-bottom:14px;display:flex;flex-direction:column;gap:10px">
+      <!-- Grant card -->
+      <div>
+        <div class="sec-title" style="margin-bottom:8px">نقاط فورية</div>
+        <div class="gcard" style="padding:14px;border-color:rgba(176,124,16,0.25)">
+          <input class="fi" id="bonusTaskName" placeholder="اسم الإنجاز (مثال: ساعد في الطبخ)..." style="margin-bottom:12px">
+          <div class="bonus-counter">
+            <div class="bonus-label">النقاط</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <button onclick="changeBonusPts(-1)" class="counter-btn minus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+              <div id="bonusPtsDisplay" class="bonus-value">5</div>
+              <button onclick="changeBonusPts(1)" class="counter-btn plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            </div>
           </div>
+          <button class="btn-p btn-gold" onclick="grantBonusPoints()"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> منح النقاط</button>
         </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-p btn-gold" style="flex:1" onclick="grantBonusPoints()"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> منح</button>
-          <button class="btn-p btn-red" style="flex:1" onclick="deductPoints()"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> خصم</button>
+      </div>
+      <!-- Deduct card -->
+      <div>
+        <div class="sec-title" style="margin-bottom:8px">خصم فوري</div>
+        <div class="gcard" style="padding:14px;border-color:rgba(220,38,38,0.2)">
+          <input class="fi" id="deductReasonName" placeholder="سبب الخصم (مثال: تجاوز وقت الشاشة)..." style="margin-bottom:12px">
+          <div class="bonus-counter">
+            <div class="bonus-label">النقاط</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <button onclick="changeDeductPts(-1)" class="counter-btn minus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+              <div id="deductPtsDisplay" class="bonus-value neg">5</div>
+              <button onclick="changeDeductPts(1)" class="counter-btn plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+            </div>
+          </div>
+          <button class="btn-p btn-red" onclick="deductPoints()"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> خصم النقاط</button>
         </div>
       </div>
     </div>
@@ -1503,6 +1517,7 @@ let db = {
 let selectedChild=null, selectedDay=new Date().getDay();
 let selTaskEmoji='⭐', selDefEmoji='⭐', selPenEmoji='😤', selTeamEmoji='🤝';
 let bonusPts = 5;
+let deductPts = 5;
 let selAvatarIdx=0, uploadedPhotoData=null, goalModalChildId=null;
 let loginRole='adult';
 
@@ -1512,42 +1527,81 @@ function initParticles(){
   var canvas = document.getElementById('particleCanvas');
   if(!canvas) return;
   var ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  window.addEventListener('resize', function(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-  var particles = [];
-  for(var i=0; i<60; i++){
-    particles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      r: Math.random()*1.5+0.3,
-      dx: (Math.random()-0.5)*0.3,
-      dy: (Math.random()-0.5)*0.3,
-      o: Math.random()*0.4+0.1,
-      c: ['#6C63FF','#FFD166','#06D6A0','#3A86FF'][Math.floor(Math.random()*4)]
-    });
-  }
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(function(p){
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=p.c;
-      ctx.globalAlpha=p.o;
-      ctx.fill();
-      p.x+=p.dx; p.y+=p.dy;
-      if(p.x<0||p.x>canvas.width) p.dx*=-1;
-      if(p.y<0||p.y>canvas.height) p.dy*=-1;
-    });
-    ctx.globalAlpha=1;
-    requestAnimationFrame(draw);
-  }
-  draw();
-}
+  function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
 
+  var colors = ['#FFD166','#FFB347','#FFD166','#FFD166','#4F46E5','#047857'];
+  var weights = [0.3,0.25,0.2,0.1,0.08,0.07];
+  function pickColor(){
+    var r = Math.random(), acc=0;
+    for(var i=0;i<colors.length;i++){
+      acc+=weights[i];
+      if(r<acc) return colors[i];
+    }
+    return colors[0];
+  }
+
+  var sparks = [];
+  var MAX_SPARKS = 90;
+
+  function spawnSpark(randomY){
+    sparks.push({
+      x: Math.random()*canvas.width,
+      y: randomY ? Math.random()*canvas.height : canvas.height+10,
+      r: Math.random()*2.5+0.8,
+      speed: Math.random()*1.2+0.4,
+      drift: (Math.random()-0.5)*0.6,
+      life: randomY ? Math.random() : 1,
+      decay: Math.random()*0.0035+0.0015,
+      color: pickColor(),
+      glow: Math.random()>0.6,
+      wobble: Math.random()*Math.PI*2,
+      wobbleSpeed: Math.random()*0.03+0.01
+    });
+  }
+
+  for(var i=0;i<MAX_SPARKS;i++) spawnSpark(true);
+
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(var i=sparks.length-1;i>=0;i--){
+      var s = sparks[i];
+      s.y -= s.speed;
+      s.wobble += s.wobbleSpeed;
+      s.x += Math.sin(s.wobble)*s.drift;
+      s.life -= s.decay;
+
+      if(s.life<=0 || s.y < -10){
+        sparks.splice(i,1);
+        continue;
+      }
+
+      if(s.glow){
+        var grad = ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*4);
+        var alphaHex = Math.floor(s.life*60).toString(16);
+        if(alphaHex.length<2) alphaHex='0'+alphaHex;
+        grad.addColorStop(0, s.color + alphaHex);
+        grad.addColorStop(1, s.color+'00');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r*4,0,Math.PI*2);
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle = s.color;
+      ctx.globalAlpha = s.life * 0.7;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    if(sparks.length < MAX_SPARKS && Math.random()<0.5) spawnSpark(false);
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
 function showLoading(txt='جاري التحميل...'){
   document.getElementById('loadingText').textContent=txt;
   document.getElementById('loadingOverlay').classList.add('show');
@@ -2311,6 +2365,11 @@ async function addCustomTask(){
 }
 
 // ===== BONUS POINTS =====
+function changeDeductPts(delta){
+  deductPts = Math.max(1, Math.min(30, deductPts + delta));
+  document.getElementById('deductPtsDisplay').textContent = deductPts;
+}
+
 function changeBonusPts(delta){
   bonusPts = Math.max(1, Math.min(30, bonusPts + delta));
   document.getElementById('bonusPtsDisplay').textContent = bonusPts;
@@ -2318,18 +2377,18 @@ function changeBonusPts(delta){
 
 async function deductPoints(){
   if(!selectedChild) return;
-  var name = document.getElementById('bonusTaskName').value.trim();
+  var name = document.getElementById('deductReasonName').value.trim();
   if(!name){ alert('اكتب سبب الخصم أولاً'); return; }
   var c = db.children.find(function(x){ return x.id===selectedChild; });
   if(!c) return;
-  if((c.points||0) < bonusPts){ alert('النقاط الحالية أقل من المقدار المطلوب خصمه'); return; }
-  adjustPtsLocal(selectedChild, -bonusPts);
-  document.getElementById('bonusTaskName').value = '';
+  if((c.points||0) < deductPts){ alert('النقاط الحالية أقل من المقدار المطلوب خصمه'); return; }
+  adjustPtsLocal(selectedChild, -deductPts);
+  document.getElementById('deductReasonName').value = '';
   // Show penalty alert
   document.getElementById('penAv').innerHTML = getAvatarHtml(c);
   document.getElementById('penName').textContent = c.name;
   document.getElementById('penMsg').textContent = name;
-  document.getElementById('penPts').textContent = '-' + bonusPts + ' نقطة';
+  document.getElementById('penPts').textContent = '-' + deductPts + ' نقطة';
   document.getElementById('penOverlay').classList.add('show');
   renderLeaderboard(); renderChildChips();
   sb.from('children').update({points:db.children.find(function(x){return x.id===selectedChild;}).points}).eq('id',selectedChild);
