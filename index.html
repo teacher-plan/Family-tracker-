@@ -1088,7 +1088,29 @@ window.addEventListener('unhandledrejection',function(e){
 
 <!-- LOGIN SCREEN -->
 <div class="login-screen" id="loginScreen">
-  <div class="login-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 4v5a6 6 0 0 0 12 0V4"/><path d="M12 15v4"/><path d="M8 19h8"/></svg></div>
+  <div class="mascot-wrap">
+  <svg width="90" height="90" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+    <!-- Body -->
+    <circle cx="45" cy="50" r="30" fill="#6C63FF"/>
+    <!-- Star body -->
+    <polygon points="45,20 52,38 72,38 57,50 63,68 45,57 27,68 33,50 18,38 38,38" fill="#FFD166" stroke="#FFB347" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Eyes -->
+    <circle cx="39" cy="46" r="3.5" fill="white"/>
+    <circle cx="51" cy="46" r="3.5" fill="white"/>
+    <circle cx="40" cy="47" r="1.8" fill="#1a1a2e"/>
+    <circle cx="52" cy="47" r="1.8" fill="#1a1a2e"/>
+    <!-- Blush -->
+    <circle cx="34" cy="52" r="4" fill="#FF6B9D" opacity="0.4"/>
+    <circle cx="56" cy="52" r="4" fill="#FF6B9D" opacity="0.4"/>
+    <!-- Smile -->
+    <path d="M38,55 Q45,62 52,55" stroke="#1a1a2e" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Sparkles -->
+    <circle cx="15" cy="20" r="3" fill="#FFD166" opacity="0.8"/>
+    <circle cx="75" cy="25" r="2" fill="#06D6A0" opacity="0.8"/>
+    <circle cx="20" cy="65" r="2.5" fill="#EF476F" opacity="0.6"/>
+    <circle cx="72" cy="70" r="2" fill="#6C63FF" opacity="0.7"/>
+  </svg>
+</div>
   <div class="login-title">البطل <span class="accent">الأسبوعي</span></div>
   <div class="login-sub">نحفّز أبطالنا الصغار كل أسبوع</div>
   <div class="login-card">
@@ -1603,6 +1625,23 @@ function initParticles(){
   }
   animate();
 }
+function addFloatingPlanets(){
+  var colors=['#6C63FF','#FFD166','#06D6A0','#EF476F','#3A86FF'];
+  var sizes=[20,28,16,24,18,22];
+  for(var i=0;i<8;i++){
+    var el=document.createElement('div');
+    el.className='planet';
+    el.style.width=sizes[i%sizes.length]+'px';
+    el.style.height=sizes[i%sizes.length]+'px';
+    el.style.background=colors[i%colors.length];
+    el.style.left=Math.random()*100+'%';
+    el.style.top=(Math.random()*150+50)+'%';
+    el.style.animationDuration=(Math.random()*20+15)+'s';
+    el.style.animationDelay=(-Math.random()*20)+'s';
+    document.body.appendChild(el);
+  }
+}
+
 function showLoading(txt='جاري التحميل...'){
   document.getElementById('loadingText').textContent=txt;
   document.getElementById('loadingOverlay').classList.add('show');
@@ -1758,6 +1797,7 @@ async function init(){
   // Wire up photo upload buttons via JS (not inline onclick)
   // Particle animation
   initParticles();
+  addFloatingPlanets();
 
   document.getElementById('uploadPhotoBtn').onclick = function(){ document.getElementById('photoUpload').click(); };
   document.getElementById('uploadPhotoSetupBtn').onclick = function(){ document.getElementById('photoUploadSetup').click(); };
@@ -1858,6 +1898,32 @@ function dayStr(dayIdx){
 function pKey(cid,tid,date){return cid+'__'+tid+'__'+date;}
 
 // ===== AVATAR =====
+function getLevel(pts){
+  var p=pts||0;
+  if(p>=180) return {lvl:5,title:'أسطورة الأسبوع',color:'#DC2626',next:999};
+  if(p>=120) return {lvl:4,title:'نجم لامع',color:'#B07C10',next:180};
+  if(p>=70)  return {lvl:3,title:'محارب شجاع',color:'#047857',next:120};
+  if(p>=30)  return {lvl:2,title:'بطل ناشئ',color:'#4F46E5',next:70};
+  return {lvl:1,title:'مبتدئ صغير',color:'#6B7280',next:30};
+}
+function getLevelXP(pts){
+  var info=getLevel(pts);
+  var prevPts=[0,0,30,70,120,180][info.lvl-1]||0;
+  var nextPts=info.next===999?pts:info.next;
+  var pct=info.next===999?100:Math.min(100,Math.round(((pts-prevPts)/(nextPts-prevPts))*100));
+  return {pct:pct, info:info};
+}
+function getBannerColor(idx){
+  var colors=[
+    'linear-gradient(135deg,#6C63FF,#A855F7)',
+    'linear-gradient(135deg,#F59E0B,#EF4444)',
+    'linear-gradient(135deg,#10B981,#3B82F6)',
+    'linear-gradient(135deg,#EC4899,#8B5CF6)',
+    'linear-gradient(135deg,#F97316,#FBBF24)',
+  ];
+  return colors[idx%colors.length];
+}
+
 function getAvatarHtml(child){
   if(child.photo_url) return '<img src="'+child.photo_url+'" style="width:100%;height:100%;object-fit:cover">';
   return AVATARS[(child.avatar_idx||0)%AVATARS.length];
@@ -1879,7 +1945,7 @@ function renderLeaderboard(){
     chartWrap.innerHTML='<div class="empty-st"><div class="ei">🏆</div><p>أضف أطفالك لترى المنافسة هنا</p></div>';
     document.getElementById('rankList').innerHTML='';document.getElementById('statsRow').innerHTML='';return;
   }
-  chartWrap.innerHTML='<div class="chart-title">نقاط البطولة الأسبوعية</div><div class="bars-container" id="barsContainer"></div>';
+  chartWrap.innerHTML='<div class="chart-title">🏆 بطولة الأسبوع</div><div class="bars-container" id="barsContainer"></div>';
   const bc=document.getElementById('barsContainer');
   sorted.forEach((c,i)=>{
     const pct=Math.max(8,Math.round(((c.points||0)/maxPts)*155));
@@ -2005,7 +2071,7 @@ function renderTaskList(){
     const type=db.defaultTasks.find(x=>x.id===t.id)?'default':'custom';
     const div=document.createElement('div');
     div.className='task-card '+(st||'');
-    div.innerHTML='<div class="task-icon-wrap">'+t.icon+'</div><div class="task-body"><div class="task-name">'+t.name+'</div><div class="task-pts">+'+(t.points||10)+' نقطة</div>'+(t.time_label?'<div class="task-time">⏰ '+t.time_label+'</div>':'')+'</div><div class="task-actions"><button class="tbtn tbtn-ok '+(st==='done'?'on':'')+'">✓</button><button class="tbtn tbtn-no '+(st==='failed'?'on':'')+'">✗</button></div>';
+    div.innerHTML='<div class="task-icon-box" style="background:linear-gradient(135deg,rgba(108,99,255,0.08),rgba(108,99,255,0.03));border-color:rgba(108,99,255,0.15)">'+t.icon+'</div><div class="task-body"><div class="task-name">'+t.name+'</div><div class="task-pts">+'+(t.points||10)+' نقطة</div>'+(t.time_label?'<div class="task-time">⏰ '+t.time_label+'</div>':'')+'</div><div class="task-actions"><button class="tbtn tbtn-ok '+(st==='done'?'on':'')+'"><svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></button><button class="tbtn tbtn-no '+(st==='failed'?'on':'')+'"><svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/></svg></button></div>';
     const btns=div.querySelectorAll('.tbtn');
     btns[0].onclick=()=>setProgress(t.id,'done',t.name,(t.points||10),t.icon,type);
     btns[1].onclick=()=>setProgress(t.id,'failed',t.name,(t.points||10),t.icon,type);
@@ -2073,7 +2139,7 @@ function renderPenaltyList(){
     const active=selectedChild&&db.penaltyLogs[k];
     const div=document.createElement('div');
     div.className='task-card '+(active?'failed':'');
-    div.innerHTML='<div class="task-icon-wrap">'+p.icon+'</div><div class="task-body"><div class="task-name">'+p.name+'</div><div class="task-pts neg">-'+p.points+' نقطة</div></div><div class="task-actions"><button class="tbtn tbtn-pen '+(active?'on':'')+'" '+(selectedChild?'':'disabled')+'><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button></div>';
+    div.innerHTML='<div class="task-icon-box" style="background:linear-gradient(135deg,rgba(220,38,38,0.07),rgba(220,38,38,0.02));border-color:rgba(220,38,38,0.15)">'+p.icon+'</div><div class="task-body"><div class="task-name">'+p.name+'</div><div class="task-pts neg">-'+p.points+' نقطة</div></div><div class="task-actions"><button class="tbtn tbtn-pen '+(active?'on':'')+'" '+(selectedChild?'':'disabled')+'><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button></div>';
     const btn=div.querySelector('.tbtn-pen');
     btn.onclick=()=>togglePenalty(p.id,p.name,p.points,p.icon);
     cont.appendChild(div);
@@ -2193,7 +2259,12 @@ function openChildViewById(cid){
   const today=new Date().getDay(),todayDate=dayStr(today);
   document.getElementById('cvAvatar').innerHTML=getAvatarHtml(c);
   document.getElementById('cvName').textContent=c.name;
-  document.getElementById('cvPts').textContent='⭐ '+(c.points||0)+' نقطة';
+  var cvLv=getLevelXP(c.points||0);
+  document.getElementById('cvPts').innerHTML=
+    '<div style="font-size:14px;color:var(--gold);font-weight:800;font-family:Sora,sans-serif">'+(c.points||0)+' نقطة</div>'
+    +'<span class="level-badge" style="background:'+cvLv.info.color+';margin-top:5px;display:inline-flex">Lv.'+cvLv.info.lvl+' • '+cvLv.info.title+'</span>'
+    +'<div class="xp-bar-wrap" style="margin-top:8px;width:180px;margin-right:auto;margin-left:auto"><div class="xp-bar-fill" style="width:'+cvLv.pct+'%"></div></div>'
+    +'<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:3px">'+(cvLv.pct)+'% نحو المستوى التالي</div>';
   const gb=document.getElementById('cvGoalBox');
   if(c.goal) gb.innerHTML='<div class="cv-goal-box"><div class="cv-goal-label">🎯 هدفي هذا الأسبوع</div><div class="cv-goal-text">'+c.goal+'</div></div>';
   else gb.innerHTML='';
@@ -2326,7 +2397,7 @@ function renderDefaultTasks(){
   cont.innerHTML='';
   db.defaultTasks.forEach(t=>{
     const div=document.createElement('div');div.className='task-card';
-    div.innerHTML='<div class="task-icon-wrap">'+t.icon+'</div><div class="task-body"><div class="task-name">'+t.name+'</div><div class="task-pts">+'+t.points+' نقطة</div>'+(t.time_label?'<div class="task-time">⏰ '+t.time_label+'</div>':'')+'</div><button class="icdel">🗑️</button>';
+    div.innerHTML='<div class="task-icon-box" style="background:linear-gradient(135deg,rgba(108,99,255,0.08),rgba(108,99,255,0.03));border-color:rgba(108,99,255,0.15)">'+t.icon+'</div><div class="task-body"><div class="task-name">'+t.name+'</div><div class="task-pts">+'+t.points+' نقطة</div>'+(t.time_label?'<div class="task-time">⏰ '+t.time_label+'</div>':'')+'</div><button class="icdel">🗑️</button>';
     div.querySelector('.icdel').onclick=()=>deleteDefaultTask(t.id);
     cont.appendChild(div);
   });
@@ -2351,7 +2422,7 @@ function renderDefaultPenalties(){
   cont.innerHTML='';
   db.defaultPenalties.forEach(p=>{
     const div=document.createElement('div');div.className='task-card';div.style='border-color:rgba(239,68,68,0.2)';
-    div.innerHTML='<div class="task-icon-wrap">'+p.icon+'</div><div class="task-body"><div class="task-name">'+p.name+'</div><div class="task-pts neg">-'+p.points+' نقطة</div></div><button class="icdel">🗑️</button>';
+    div.innerHTML='<div class="task-icon-box" style="background:linear-gradient(135deg,rgba(220,38,38,0.07),rgba(220,38,38,0.02));border-color:rgba(220,38,38,0.15)">'+p.icon+'</div><div class="task-body"><div class="task-name">'+p.name+'</div><div class="task-pts neg">-'+p.points+' نقطة</div></div><button class="icdel">🗑️</button>';
     div.querySelector('.icdel').onclick=()=>deleteDefaultPenalty(p.id);
     cont.appendChild(div);
   });
@@ -2439,7 +2510,7 @@ async function grantBonusPoints(){
 function showCelebration(cid,tname,pts,icon){
   const c=db.children.find(x=>x.id===cid);if(!c) return;
   document.getElementById('celAv').innerHTML=getAvatarHtml(c);
-  document.getElementById('celIcon').textContent=icon;
+  document.getElementById('celIcon').innerHTML='<span class="cel-trophy">'+icon+'</span>';
   document.getElementById('celName').textContent='أحسنت '+c.name+'! 🌟';
   document.getElementById('celMsg').textContent='أنجزت: '+tname;
   document.getElementById('celPts').textContent='+'+pts+' نقطة ⭐';
