@@ -1298,7 +1298,7 @@ window.addEventListener('unhandledrejection',function(e){
               <button onclick="changeBonusPts(1)" class="counter-btn plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
             </div>
           </div>
-          <button class="btn-p btn-gold" onclick="grantBonusPoints()"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> منح النقاط</button>
+          <div style="display:flex;gap:8px"><button class="btn-p btn-gold" style="padding:10px 8px;font-size:13px;flex:1" onclick="grantBonusPoints()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;vertical-align:middle;margin-left:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> منح</button>
         </div>
       </div>
       <!-- Deduct card -->
@@ -1314,7 +1314,7 @@ window.addEventListener('unhandledrejection',function(e){
               <button onclick="changeDeductPts(1)" class="counter-btn plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
             </div>
           </div>
-          <button class="btn-p btn-red" onclick="deductPoints()"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> خصم النقاط</button>
+          <button class="btn-p btn-red" style="padding:10px 8px;font-size:13px;flex:1" onclick="deductPoints()"><svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;vertical-align:middle;margin-left:4px"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> خصم</button></div>
         </div>
       </div>
     </div>
@@ -1625,23 +1625,6 @@ function initParticles(){
   }
   animate();
 }
-function addFloatingPlanets(){
-  var colors=['#6C63FF','#FFD166','#06D6A0','#EF476F','#3A86FF'];
-  var sizes=[20,28,16,24,18,22];
-  for(var i=0;i<8;i++){
-    var el=document.createElement('div');
-    el.className='planet';
-    el.style.width=sizes[i%sizes.length]+'px';
-    el.style.height=sizes[i%sizes.length]+'px';
-    el.style.background=colors[i%colors.length];
-    el.style.left=Math.random()*100+'%';
-    el.style.top=(Math.random()*150+50)+'%';
-    el.style.animationDuration=(Math.random()*20+15)+'s';
-    el.style.animationDelay=(-Math.random()*20)+'s';
-    document.body.appendChild(el);
-  }
-}
-
 function showLoading(txt='جاري التحميل...'){
   document.getElementById('loadingText').textContent=txt;
   document.getElementById('loadingOverlay').classList.add('show');
@@ -1797,7 +1780,6 @@ async function init(){
   // Wire up photo upload buttons via JS (not inline onclick)
   // Particle animation
   initParticles();
-  addFloatingPlanets();
 
   document.getElementById('uploadPhotoBtn').onclick = function(){ document.getElementById('photoUpload').click(); };
   document.getElementById('uploadPhotoSetupBtn').onclick = function(){ document.getElementById('photoUploadSetup').click(); };
